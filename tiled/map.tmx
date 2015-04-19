@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="10" tilewidth="70" tileheight="70" nextobjectid="20">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="12" tilewidth="70" tileheight="70" nextobjectid="40">
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="1">
   <image source="images/tiles_spritesheet.png" width="852" height="856"/>
  </tileset>
- <layer name="Background" width="15" height="10">
+ <layer name="Background" width="16" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF9ACqFNJDDQAA93gBKQ==
+   eJxjYBgFQxmoUkiPdAAAVK8BKQ==
   </data>
  </layer>
  <objectgroup name="objects">
-  <object id="6" gid="39" x="350" y="490"/>
-  <object id="7" gid="39" x="70" y="490"/>
-  <object id="14" gid="39" x="490" y="490"/>
-  <object id="17" gid="5" x="910" y="350"/>
+  <object id="6" gid="39" x="350" y="560"/>
+  <object id="7" gid="39" x="70" y="560"/>
+  <object id="14" gid="39" x="490" y="560"/>
+  <object id="17" gid="5" x="910" y="420"/>
+  <object id="25" gid="5" x="70" y="140"/>
+  <object id="26" gid="5" x="591" y="149"/>
+  <object id="30" gid="5" x="700" y="350"/>
+  <object id="31" gid="5" x="630" y="350"/>
+  <object id="39" gid="19" x="980" y="210"/>
  </objectgroup>
- <layer name="Front" width="15" height="10">
+ <layer name="Front" width="16" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYKAMcAOxOAExbGoImUGqGmLMoDVQAGJLKBaDiukQ0ENIHgS4kMwlBSsCcSAFWJ8CDABS/gxd
+   eJxjYBh4wA3E4gTEsKkhxhxsangIqCPGHHoBBSC2hGIxqJgOEfqIUQMCXEjmk4IViTSfEAikEOtTiAE81Azp
   </data>
  </layer>
 </map>
