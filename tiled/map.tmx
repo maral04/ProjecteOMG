@@ -3,6 +3,9 @@
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="1">
   <image source="images/tiles_spritesheet.png" width="852" height="856"/>
  </tileset>
+ <tileset firstgid="145" name="hud_spritesheet" tilewidth="70" tileheight="70">
+  <image source="images/hud_spritesheet.png" width="269" height="269"/>
+ </tileset>
  <layer name="Background" width="16" height="12">
   <data encoding="base64" compression="zlib">
    eJxjYBgFQxmoUkiPdAAAVK8BKQ==

@@ -54,3 +54,4 @@ void keyPressed() {
   if (nd!=-1&&(x.size()<=1||!(x.get(1)==x.get(0)+dx[nd]&&y.get(1)==y.get(0)+dy[nd]))) dir=nd;
 }
 
+
