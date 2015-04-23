@@ -1,0 +1,2 @@
+Al final de tot el load posar un gamestart = true;
+Do bucle while gamestart = false (mentre està carregant fa coses nais).
