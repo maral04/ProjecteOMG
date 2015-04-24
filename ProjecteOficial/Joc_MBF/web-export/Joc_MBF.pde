@@ -1,4 +1,5 @@
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
+/* @pjs preload="Visual/Characters/Player/p"+i+"_spritesheet.png"; */
 
 PImage src = new PImage[1];
 PFont font;
@@ -23,7 +24,9 @@ void setup() {
 
   //Càrrega dels personatges del Jugador.
   for (var i = 0; i < pgtotal; i++) {
+    //El carrega molts cops.
     src[i] = loadImage("Visual/Characters/Player/p"+i+"_spritesheet.png");
+    noLoop();
   }
 
   //Càrrega dels Background.
@@ -31,7 +34,8 @@ void setup() {
   backgroundimg[1] = loadImage("Visual/Background/bg_desert.png");
   backgroundimg[2] = loadImage("Visual/Background/bg_grasslands.png");
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
-
+  noLoop();
+  
   //Atributs de la font
   font = loadFont("Arial, 16, true");
   fill(0);
@@ -67,24 +71,38 @@ void draw() {
 
   lines[5].trim();
   String coordptglinia = lines[5].substring(12);
-  var espai = 0;
-  var chardins;
-  var coordfiltrades = "";
+  int espai = 0;
+  char chardins;
+  String[] coordfiltrades = "";
 
-  /* ****Char to INT!*/
+  //drawtry(coordptglinia, -2);
+
+/*
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
     if (chardins != "") {
       if (espai == 0) {
-        ptgx[0] = ptgx[0] + chardins;
+        //ptgx[0] = ptgx[0] + chardins;
+        coordfiltrades[0] = coordfiltrades[0] + chardins;
+        //drawtry(coordfiltrades[0], -2);
+        
       } else {
         if (espai == 1) {
-          ptgy[0] = ptgy[0] + chardins;
+          //ptgy[0] = ptgy[0] + chardins;
+          coordfiltrades[1] = coordfiltrades[1] + chardins;
+          //drawtry(coordfiltrades[1], -4);
+          
         } else {
           if (espai == 2) {
-            ptgw[0] = ptgw[0] + chardins;
+            //ptgw[0] = ptgw[0] + chardins;
+            coordfiltrades[2] = coordfiltrades[2] + chardins;
+           // drawtry(coordfiltrades[2], -4);
+            
           } else {
-            ptgh[0] = ptgh[0] + chardins;
+            //ptgh[0] = ptgh[0] + chardins;
+            coordfiltrades[3] = coordfiltrades[3] + chardins;
+            //drawtry(coordfiltrades[3], -2);
+            
           }
         }
       }
@@ -92,12 +110,29 @@ void draw() {
       espai++;
     }
   }
-
-
-  if (printar == true) {
-    drawtry(ptgx[0], 1);
-    printar = false;
-  }
+  
+  ptgx[0] = parseInt(coordfiltrades[0]);
+  ptgy[0] = parseInt(coordfiltrades[1]);
+  ptgw[0] = parseInt(coordfiltrades[2]);
+  ptgh[0] = parseInt(coordfiltrades[3]);
+  */
+  
+  /*
+  ptgx[0] = parseInt(ptgx[0]);
+  ptgy[0] = parseInt(ptgy[0]);
+  ptgw[0] = parseInt(ptgw[0]);
+  ptgh[0] = parseInt(ptgh[0]);
+  
+  */
+  /*
+  for (int i = 0; i < 1; i++) {
+   drawtry(ptgx[0], 1);
+   drawtry(ptgy[0], 2);
+   drawtry(ptgw[0], 3);
+   drawtry(ptgh[0], 4);
+   
+   }
+   */
   /*
   drawtry(ptgy[0], 1);
    drawtry(ptgw[0], 1);
