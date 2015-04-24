@@ -35,7 +35,7 @@ void setup() {
   backgroundimg[2] = loadImage("Visual/Background/bg_grasslands.png");
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
   noLoop();
-  
+
   //Atributs de la font
   font = loadFont("Arial, 16, true");
   fill(0);
@@ -67,7 +67,8 @@ void draw() {
   /*
   for (int i = 0; i < lines.length; i++) {
    drawtry(lines[i], i);
-   }*/
+   }
+   */
 
   lines[5].trim();
   String coordptglinia = lines[5].substring(12);
@@ -75,9 +76,9 @@ void draw() {
   char chardins;
   String[] coordfiltrades = "";
 
-  //drawtry(coordptglinia, -2);
+  drawtry(coordptglinia, -2);
 
-/*
+
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
     if (chardins != "") {
@@ -85,24 +86,20 @@ void draw() {
         //ptgx[0] = ptgx[0] + chardins;
         coordfiltrades[0] = coordfiltrades[0] + chardins;
         //drawtry(coordfiltrades[0], -2);
-        
       } else {
         if (espai == 1) {
           //ptgy[0] = ptgy[0] + chardins;
           coordfiltrades[1] = coordfiltrades[1] + chardins;
           //drawtry(coordfiltrades[1], -4);
-          
         } else {
           if (espai == 2) {
             //ptgw[0] = ptgw[0] + chardins;
             coordfiltrades[2] = coordfiltrades[2] + chardins;
-           // drawtry(coordfiltrades[2], -4);
-            
+            // drawtry(coordfiltrades[2], -4);
           } else {
             //ptgh[0] = ptgh[0] + chardins;
             coordfiltrades[3] = coordfiltrades[3] + chardins;
             //drawtry(coordfiltrades[3], -2);
-            
           }
         }
       }
@@ -110,20 +107,20 @@ void draw() {
       espai++;
     }
   }
-  
+
   ptgx[0] = parseInt(coordfiltrades[0]);
   ptgy[0] = parseInt(coordfiltrades[1]);
   ptgw[0] = parseInt(coordfiltrades[2]);
   ptgh[0] = parseInt(coordfiltrades[3]);
-  */
-  
+
+
   /*
   ptgx[0] = parseInt(ptgx[0]);
-  ptgy[0] = parseInt(ptgy[0]);
-  ptgw[0] = parseInt(ptgw[0]);
-  ptgh[0] = parseInt(ptgh[0]);
-  
-  */
+   ptgy[0] = parseInt(ptgy[0]);
+   ptgw[0] = parseInt(ptgw[0]);
+   ptgh[0] = parseInt(ptgh[0]);
+   
+   */
   /*
   for (int i = 0; i < 1; i++) {
    drawtry(ptgx[0], 1);
