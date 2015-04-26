@@ -1,9 +1,9 @@
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
-/* @pjs preload="Visual/Characters/Player/p"+i+"_spritesheet.png"; */
 
 PImage src = new PImage[1];
 PFont font;
 PImage backgroundimg = new PImage[3];
+PImage imgJugador;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx = new int[11];
@@ -58,9 +58,8 @@ void drawtry(var printaa, var i) {
 void draw() {
 
   drawbackground(backgroundimg[2]);
-
+  
   //Tría del personatge, 0-1.
-
   //Cárrega del .txt amb les coordenades linia per linia del personatge a l'Sprite Sheet.
   lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
 
@@ -76,9 +75,11 @@ void draw() {
   char chardins;
   String[] coordfiltrades = "";
 
+  image(src[ptg],5,0);
   drawtry(coordptglinia, -2);
+  
 
-
+/*
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
     if (chardins != "") {
@@ -112,7 +113,7 @@ void draw() {
   ptgy[0] = parseInt(coordfiltrades[1]);
   ptgw[0] = parseInt(coordfiltrades[2]);
   ptgh[0] = parseInt(coordfiltrades[3]);
-
+  /*
 
   /*
   ptgx[0] = parseInt(ptgx[0]);
@@ -148,10 +149,11 @@ void draw() {
    ptgx[0] = 0;
    ptgy[0] = 0;
    ptgw[0] = 72;
-   ptgh[0] = 97;*/
+   ptgh[0] = 97;
+ */
 
-  //PImage imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
-  PImage imgJugador = src[ptg].get(0, 0, 72, 97);
+  //imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
+  imgJugador = src[ptg].get(0, 0, 72, 97);
   image(imgJugador, 0, 0);
 
   //w = ;
