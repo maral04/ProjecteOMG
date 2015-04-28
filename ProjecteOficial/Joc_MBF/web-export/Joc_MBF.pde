@@ -3,13 +3,13 @@
 PImage[] src = new PImage[3];
 PFont font;
 PImage[] backgroundimg = new PImage[4];
-PImage imgJugador;
+PImage[] imgJugador = new PImage[12];
 
 
 String coordptglinia;
 int espai;
 char chardins;
-String[] coordfiltrades;
+String[] coordfiltrades = new String[4];
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[12];
@@ -20,7 +20,6 @@ int ptgh[] = new int[12];
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
-String[] lines;
 
 void setup() {
   size(1024, 512);
@@ -49,10 +48,16 @@ void setup() {
 
 void draw() {
   drawbackground(backgroundimg[2]);
+  movimentPtg();
   
+  //imgJugador = src[ptg].get(0, 0, 72, 97);
+  image(imgJugador[0], 20, 20);
+}
+
+void movimentPtg(){
   //Tría del personatge, 0-1.
   //Cárrega del .txt amb les coordenades linia per linia del personatge a l'Sprite Sheet.
-  lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
+  String[] lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
   noLoop();
 
   /*
@@ -60,41 +65,31 @@ void draw() {
     drawtry(lines[i], i);
   }
   */
-   /*
+   
   lines[5].trim();
   coordptglinia = lines[5].substring(12);
   espai = 0;
-
-  drawtry(coordptglinia, -2);
   
-  coordfiltrades[0] = "";
-  coordfiltrades[1] = "";
-  coordfiltrades[2] = "";
-  coordfiltrades[3] = "";
- 
+ // drawtry(coordptglinia, -2);
+
+  //Omplim l'array amb strings buits.
+  for (var i = 0; i != coordfiltrades.length; i++) {
+    coordfiltrades[i] = "";
+  }
+   
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
-    //println(a);
-    if (!chardins.equals(' ')) {
+    if (!chardins.equals(" ")) {
       if (espai == 0) {
-        //ptgx[0] = ptgx[0] + chardins;
         coordfiltrades[0] = coordfiltrades[0] + chardins;
-        //println(a);
-        //drawtry(coordfiltrades[0], -2);
       } else {
         if (espai == 1) {
-          //ptgy[0] = ptgy[0] + chardins;
           coordfiltrades[1] = coordfiltrades[1] + chardins;
-          //drawtry(coordfiltrades[1], -4);
         } else {
           if (espai == 2) {
-            //ptgw[0] = ptgw[0] + chardins;
             coordfiltrades[2] = coordfiltrades[2] + chardins;
-            // drawtry(coordfiltrades[2], -4);
           } else {
-            //ptgh[0] = ptgh[0] + chardins;
             coordfiltrades[3] = coordfiltrades[3] + chardins;
-            //drawtry(coordfiltrades[3], -2);
           }
         }
       }
@@ -103,20 +98,27 @@ void draw() {
     }
   }
   
-  
-  
-  ptgx[0] = parseInt(coordfiltrades[0]);
-  ptgy[0] = parseInt(coordfiltrades[1]);
-  ptgw[0] = parseInt(coordfiltrades[2]);
-  ptgh[0] = parseInt(coordfiltrades[3]);
-  
+  //Pasem d'String a INT el contingut.
+  for (int i = 0; i < 1; i++) {
+    ptgx[i] = parseInt(coordfiltrades[0]);
+    ptgy[i] = parseInt(coordfiltrades[1]);
+    ptgw[i] = parseInt(coordfiltrades[2]);
+    ptgh[i] = parseInt(coordfiltrades[3]);
+  }
+   
+  drawtry("o. "+ptgx[0]+" .", 1);
+  drawtry("o. "+ptgy[0]+" .", 2);
+  drawtry("o. "+ptgw[0]+" .", 3);
+  drawtry("o. "+ptgh[0]+" .", 4);
+ 
 
-  
+  /*
   ptgx[0] = parseInt(ptgx[0]);
   ptgy[0] = parseInt(ptgy[0]);
   ptgw[0] = parseInt(ptgw[0]);
   ptgh[0] = parseInt(ptgh[0]);
-   */
+  /*
+  
    
   /*
   for (int i = 0; i < 1; i++) {
@@ -127,31 +129,10 @@ void draw() {
    }
    */
    
-   /*
-   drawtry(ptgy[0], 1);
-   drawtry(ptgw[0], 1);
-   drawtry(ptgh[0], 1);
-   */
-
-  //ptgx[0] = coordfiltrades;
-  /*println(ptgx[0]);
-   println(ptgy[0]);
-   println(ptgw[0]);
-   println(ptgh[0]);*/
-  //println(coordptglinia);
-
-
+  //Bucle que carrega els sectors de la sheet a un array d'imatges.
+  //for asd
+  imgJugador[0] = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
   
-   ptgx[0] = 0;
-   ptgy[0] = 0;
-   ptgw[0] = 72;
-   ptgh[0] = 97;
- 
-  
-  imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
-  //imgJugador = src[ptg].get(0, 0, 72, 97);
-  image(imgJugador, 20, 20);
-
 }
 
 //Posa l'imatge al background.
@@ -166,5 +147,4 @@ void drawtry(String printaa, int i) {
     text(printaa, 475, 225+((i-5)*22));
   }
 }
-
 
