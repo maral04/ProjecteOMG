@@ -24,7 +24,7 @@ String[] lines;
 
 void setup() {
   size(1024, 512);
-  frameRate(16);
+  frameRate(12);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -46,8 +46,8 @@ void setup() {
   textFont(font, 18);
 }
 
+
 void draw() {
-  
   drawbackground(backgroundimg[2]);
   
   //Tría del personatge, 0-1.
@@ -60,20 +60,26 @@ void draw() {
     drawtry(lines[i], i);
   }
   */
-
+   /*
   lines[5].trim();
   coordptglinia = lines[5].substring(12);
   espai = 0;
 
   drawtry(coordptglinia, -2);
   
-/*
+  coordfiltrades[0] = "";
+  coordfiltrades[1] = "";
+  coordfiltrades[2] = "";
+  coordfiltrades[3] = "";
+ 
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
-    if (chardins != "") {
+    //println(a);
+    if (!chardins.equals(' ')) {
       if (espai == 0) {
         //ptgx[0] = ptgx[0] + chardins;
         coordfiltrades[0] = coordfiltrades[0] + chardins;
+        //println(a);
         //drawtry(coordfiltrades[0], -2);
       } else {
         if (espai == 1) {
@@ -96,31 +102,33 @@ void draw() {
       espai++;
     }
   }
-
+  
+  
+  
   ptgx[0] = parseInt(coordfiltrades[0]);
   ptgy[0] = parseInt(coordfiltrades[1]);
   ptgw[0] = parseInt(coordfiltrades[2]);
   ptgh[0] = parseInt(coordfiltrades[3]);
-  /*
+  
 
-  /*
+  
   ptgx[0] = parseInt(ptgx[0]);
-   ptgy[0] = parseInt(ptgy[0]);
-   ptgw[0] = parseInt(ptgw[0]);
-   ptgh[0] = parseInt(ptgh[0]);
-   
+  ptgy[0] = parseInt(ptgy[0]);
+  ptgw[0] = parseInt(ptgw[0]);
+  ptgh[0] = parseInt(ptgh[0]);
    */
+   
   /*
   for (int i = 0; i < 1; i++) {
    drawtry(ptgx[0], 1);
    drawtry(ptgy[0], 2);
    drawtry(ptgw[0], 3);
    drawtry(ptgh[0], 4);
-   
    }
    */
-  /*
-  drawtry(ptgy[0], 1);
+   
+   /*
+   drawtry(ptgy[0], 1);
    drawtry(ptgw[0], 1);
    drawtry(ptgh[0], 1);
    */
@@ -133,20 +141,17 @@ void draw() {
   //println(coordptglinia);
 
 
-  /*
+  
    ptgx[0] = 0;
    ptgy[0] = 0;
    ptgw[0] = 72;
    ptgh[0] = 97;
- */
+ 
   
-  //imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
-  imgJugador = src[ptg].get(0, 0, 72, 97);
+  imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
+  //imgJugador = src[ptg].get(0, 0, 72, 97);
   image(imgJugador, 20, 20);
-  
 
-  //w = ;
-  //h = ;
 }
 
 //Posa l'imatge al background.
@@ -161,6 +166,4 @@ void drawtry(String printaa, int i) {
     text(printaa, 475, 225+((i-5)*22));
   }
 }
-
-
 
