@@ -1,21 +1,26 @@
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
-PImage src = new PImage[1];
+PImage[] src = new PImage[3];
 PFont font;
-PImage backgroundimg = new PImage[3];
+PImage[] backgroundimg = new PImage[4];
 PImage imgJugador;
 
+
+String coordptglinia;
+int espai;
+char chardins;
+String[] coordfiltrades;
+
 //Posició i Width i Height de la part a agafar del personatge.
-int ptgx = new int[11];
-int ptgy = new int[11];
-int ptgw = new int[11];
-int ptgh = new int[11];
+int ptgx[] = new int[12];
+int ptgy[] = new int[12];
+int ptgw[] = new int[12];
+int ptgh[] = new int[12];
 
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
 String[] lines;
-boolean printar = true;
 
 void setup() {
   size(1024, 512);
@@ -23,18 +28,17 @@ void setup() {
   //smooth();
 
   //Càrrega dels personatges del Jugador.
-  for (var i = 0; i < pgtotal; i++) {
+  for (int i = 0; i < pgtotal; i++) {
     //El carrega molts cops.
     src[i] = loadImage("Visual/Characters/Player/p"+i+"_spritesheet.png");
-    noLoop();
   }
 
+  
   //Càrrega dels Background.
   backgroundimg[0] = loadImage("Visual/Background/bg_castle.png");
   backgroundimg[1] = loadImage("Visual/Background/bg_desert.png");
   backgroundimg[2] = loadImage("Visual/Background/bg_grasslands.png");
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
-  noLoop();
 
   //Atributs de la font
   font = loadFont("Arial, 16, true");
@@ -42,43 +46,27 @@ void setup() {
   textFont(font, 18);
 }
 
-//Posa l'imatge al background.
-void drawbackground(var b) {
-  background(b);
-}
-
-void drawtry(var printaa, var i) {
-  if (i < 5) {
-    text(printaa, 255, 225+(i*22));
-  } else {
-    text(printaa, 475, 225+((i-5)*22));
-  }
-}
-
 void draw() {
-
+  
   drawbackground(backgroundimg[2]);
   
   //Tría del personatge, 0-1.
   //Cárrega del .txt amb les coordenades linia per linia del personatge a l'Sprite Sheet.
   lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
+  noLoop();
 
   /*
   for (int i = 0; i < lines.length; i++) {
-   drawtry(lines[i], i);
-   }
-   */
+    drawtry(lines[i], i);
+  }
+  */
 
   lines[5].trim();
-  String coordptglinia = lines[5].substring(12);
-  int espai = 0;
-  char chardins;
-  String[] coordfiltrades = "";
+  coordptglinia = lines[5].substring(12);
+  espai = 0;
 
-  image(src[ptg],5,0);
   drawtry(coordptglinia, -2);
   
-
 /*
   for (int i = 0; i < coordptglinia.length; i++) {
     chardins = coordptglinia.charAt(i);
@@ -151,12 +139,28 @@ void draw() {
    ptgw[0] = 72;
    ptgh[0] = 97;
  */
-
+  
   //imgJugador = src[ptg].get(ptgx[0], ptgy[0], ptgw[0], ptgh[0]);
   imgJugador = src[ptg].get(0, 0, 72, 97);
-  image(imgJugador, 0, 0);
+  image(imgJugador, 20, 20);
+  
 
   //w = ;
   //h = ;
 }
+
+//Posa l'imatge al background.
+void drawbackground(PImage b) {
+  background(b);
+}
+
+void drawtry(String printaa, int i) {
+  if (i < 5) {
+    text(printaa, 255, 225+(i*22));
+  } else {
+    text(printaa, 475, 225+((i-5)*22));
+  }
+}
+
+
 
