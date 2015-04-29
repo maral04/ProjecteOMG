@@ -6,22 +6,15 @@ PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[12];
 PImage[] imgJugadorFlp = new PImage[12];
 
-//
-float x = 0;
-float speed = 9.0;
- 
-// store whether key pressed or released in float variables
-// 1 is pressed, 0 is not pressed
-float left = 0;
-float right = 0;
-
-//
-
 boolean flipdone = false;
+boolean direccioEsquerre = false;
+boolean direccioDreta = true;
+boolean direccio = false;
 String coordptglinia;
 int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
+float velocitat = 15.0;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[12];
@@ -61,25 +54,32 @@ void setup() {
 void draw() {
   drawbackground(backgroundimg[2]);
   movimentPtg();
+}
 
-  //imgJugador = src[ptg].get(0, 0, 72, 97);
-  /*for (int i = 0; i < 12; i++){
-    image(imgJugador[i], 20+(i*65), 20);
-  }*/
-  //image(imgJugador[0], 20, 20);
-  //x += (right - left) * speed;
-  //image(imgJugador[0], x, (height / 2));
-  //ellipse(x, height / 2, 100, 100);
-  
-  //image(imgJugador[0], 100, 20);
-  
-  for (int i = 0; i < 12; i++) {
-    image(imgJugador[i], (imgJugador[i].width*4), (20+i*40));
-    image(imgJugadorFlp[i], -imgJugadorFlp[i].width, (20+i*10));
+void movDret(PImage b) {
+  drawbackground(b);
+  if (direccio == true) {
+    scale(-1, 1);
+    direccio = false;
   }
-  
-  //image(imgJugador[1], 40, 40);
-  //image(imgJugadorFlp[0], 20, 20);
+
+  image(imgJugador[0], (velocitat), 50);
+
+
+  velocitat++;
+}
+
+void movEsquerre(PImage b) {
+  drawbackground(b);
+  if (direccio == false) {
+    scale(-1, 1);
+    direccio = true;
+  }
+
+  image(imgJugador[0], ((-imgJugador[0].width)-velocitat), 50);
+
+
+  velocitat--;
 }
 
 void movimentPtg() {
@@ -93,11 +93,11 @@ void movimentPtg() {
    drawtry(lines[i], i);
    }
    */
- 
+
   //Linia a començar. 
-  final var liniaInici = 5;
-  final var liniafinal = 16;
-  
+  var liniaInici = 5;
+  var liniafinal = 16;
+
   for (int j = liniaInici; j < liniafinal; j++) {
     lines[j].trim();
     coordptglinia = lines[j].substring(12);
@@ -139,20 +139,8 @@ void movimentPtg() {
   }
 
   //Bucle que carrega els sectors de la sheet a un array d'imatges.
-  for (int i = 0; i < 12; i++){
-    imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
-  }
-  if (flipdone == false){
-    flipTot();
-    flipdone = true;
-    movimentPtg();
-  }
-}
-
-void flipTot(){
   for (int i = 0; i < 12; i++) {
-    scale(-1, 1);
-    imgJugadorFlp[i] = imgJugador[i];
+    imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
   }
 }
 
@@ -169,68 +157,48 @@ void drawtry(String printaa, int i) {
   }
 }
 
-void keyReleased()
-{
-  if (key == CODED)
-  {
-    if (keyCode == LEFT /*|| keyCode == A*/)
-    {
-      left = 0;
-      
-    }
-    if (keyCode == RIGHT /*|| keyCode == D*/)
-    {
-      right = 0;
-    }
-  }
-}
- 
 void keyPressed()
 {
-  if (key == CODED)
+  if (keyCode == LEFT || key == 'a' || key == 'A')
   {
-    if (keyCode == LEFT /*|| keyCode == A*/)
-    {
-      left = 1;
-    }
-    if (keyCode == RIGHT /*|| keyCode == D*/)
-    {
-      right = 1;
-    }
+    movEsquerre(backgroundimg[2]);
+  }
+  if (keyCode == RIGHT || key == 'd' || key == 'D')
+  {
+    movDret(backgroundimg[2]);
   }
 }
 
 /*
 void keyPressed(){
-  if(keys['a'] || keys['A']) { 
-    //p2.move(-1,0); 
-    //left = 1;
-    //image(imgJugador[0], 20, 20);
-    
-  }
-  
-  if(keys['d'] || keys['D']) { 
-    //p2.move(1,0); 
-    //right = 1;
-    //image(imgJugador[0], 20, 20);
-  }
-  
-  if(keys[' ']) { 
-    //p2.move(-1,0); 
-    println("spaace");
-  }
-  
-
-  if(keys['w'] || keys['W']) { 
-    //p2.move(0,-1); 
-    
-  }
-  if(keys['s'] || keys['S']) { 
-    //p2.move(0,1); 
-    
-  }
-  
-}
-*/
-
+ if(keys['a'] || keys['A']) { 
+ //p2.move(-1,0); 
+ //left = 1;
+ //image(imgJugador[0], 20, 20);
+ 
+ }
+ 
+ if(keys['d'] || keys['D']) { 
+ //p2.move(1,0); 
+ //right = 1;
+ //image(imgJugador[0], 20, 20);
+ }
+ 
+ if(keys[' ']) { 
+ //p2.move(-1,0); 
+ println("spaace");
+ }
+ 
+ 
+ if(keys['w'] || keys['W']) { 
+ //p2.move(0,-1); 
+ 
+ }
+ if(keys['s'] || keys['S']) { 
+ //p2.move(0,1); 
+ 
+ }
+ 
+ }
+ */
 
