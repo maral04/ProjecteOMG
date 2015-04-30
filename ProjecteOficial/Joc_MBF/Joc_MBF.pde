@@ -28,7 +28,7 @@ int ptg = 0;
 
 void setup() {
   size(1024, 512);
-  frameRate(10);
+  frameRate(7);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -37,12 +37,14 @@ void setup() {
     src[i] = loadImage("Visual/Characters/Player/p"+i+"_spritesheet.png");
   }
 
-
   //Càrrega dels Background.
   backgroundimg[0] = loadImage("Visual/Background/bg_castle.png");
   backgroundimg[1] = loadImage("Visual/Background/bg_desert.png");
   backgroundimg[2] = loadImage("Visual/Background/bg_grasslands.png");
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
+
+  //Càrrega dels sons.
+
 
   //Atributs de la font
   font = loadFont("Arial, 16, true");
@@ -54,32 +56,40 @@ void setup() {
 void draw() {
   drawbackground(backgroundimg[2]);
   movimentPtg();
+  movDret(backgroundimg[2]);
+    
 }
 
 void movDret(PImage b) {
-  drawbackground(b);
-  if (direccio == true) {
-    scale(-1, 1);
-    direccio = false;
+  //Colisió extrem Esquerre.
+  if(velocitat > 1024-imgJugador[0].width){
+    velocitat = velocitat -10;
+    movEsquerre(backgroundimg[2]);
+  }else{
+    drawbackground(b);
+    if (direccio == true) {
+      scale(-1, 1);
+      direccio = false;
+    }
+    image(imgJugador[0], (velocitat), 50);
+    velocitat = velocitat + 4;
   }
-
-  image(imgJugador[0], (velocitat), 50);
-
-
-  velocitat++;
 }
 
 void movEsquerre(PImage b) {
-  drawbackground(b);
-  if (direccio == false) {
-    scale(-1, 1);
-    direccio = true;
+  //Colisió extrem Dret.
+  if(velocitat < 0 ){
+    velocitat = velocitat +10;
+    movDret(backgroundimg[2]);
+  }else{
+    drawbackground(b);
+    if (direccio == false) {
+      scale(-1, 1);
+      direccio = true;
+    }
+    image(imgJugador[0], ((-imgJugador[0].width)-velocitat), 50);
+    velocitat = velocitat - 4;
   }
-
-  image(imgJugador[0], ((-imgJugador[0].width)-velocitat), 50);
-
-
-  velocitat--;
 }
 
 void movimentPtg() {
