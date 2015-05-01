@@ -3,8 +3,7 @@
 PImage[] src = new PImage[3];
 PFont font;
 PImage[] backgroundimg = new PImage[4];
-PImage[] imgJugador = new PImage[12];
-PImage[] imgJugadorFlp = new PImage[12];
+PImage[] imgJugador = new PImage[11];
 
 boolean flipdone = false;
 boolean direccioEsquerre = false;
@@ -15,6 +14,8 @@ int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
 float velocitat = 15.0;
+int tipusMoviment = 0;
+boolean tipusMovimentChg = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[12];
@@ -28,7 +29,7 @@ int ptg = 0;
 
 void setup() {
   size(1024, 512);
-  frameRate(7);
+  frameRate(8);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -71,8 +72,9 @@ void movDret(PImage b) {
       scale(-1, 1);
       direccio = false;
     }
-    image(imgJugador[0], (velocitat), 50);
+    image(imgJugador[tipusMoviment], (velocitat), 50);
     velocitat = velocitat + 4;
+    canviImgPtgMvt();
   }
 }
 
@@ -87,9 +89,32 @@ void movEsquerre(PImage b) {
       scale(-1, 1);
       direccio = true;
     }
-    image(imgJugador[0], ((-imgJugador[0].width)-velocitat), 50);
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-velocitat), 50);
     velocitat = velocitat - 4;
+    canviImgPtgMvt();
   }
+}
+
+//Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
+void canviImgPtgMvt(){
+  
+  if(tipusMoviment < imgJugador.length-1){
+      tipusMoviment++;
+  }else{
+      tipusMoviment = 0;
+  }
+
+    //Moviment simple 3x.
+    /*if(tipusMoviment < 2 && tipusMovimentChg == false){
+      tipusMoviment++;
+    }else{
+      tipusMoviment--;
+      if(tipusMoviment == 0){
+        tipusMovimentChg = false;
+      }else{
+        tipusMovimentChg = true;
+      }
+    }*/
 }
 
 void movimentPtg() {
@@ -149,7 +174,7 @@ void movimentPtg() {
   }
 
   //Bucle que carrega els sectors de la sheet a un array d'imatges.
-  for (int i = 0; i < 12; i++) {
+  for (int i = 0; i < 11; i++) {
     imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
   }
 }
