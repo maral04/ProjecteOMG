@@ -1,4 +1,16 @@
+import ddf.minim.effects.*;
+import ddf.minim.analysis.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+
+Minim minim;
+AudioPlayer song;
+
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
+
+
 
 PImage[] src = new PImage[3];
 PFont font;
@@ -45,23 +57,26 @@ void setup() {
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
 
   //Càrrega dels sons.
-
-
+  minim = new Minim(this);
+ 
+  // this loads mysong.wav from the data folder
+  song = minim.loadFile("Sound/leanon.mp3");
+  song.play();
+  
   //Atributs de la font
   font = loadFont("Arial, 16, true");
   fill(0);
   textFont(font, 18);
 }
 
-
 void draw() {
   drawbackground(backgroundimg[2]);
   movimentPtg();
   movDret(backgroundimg[2]);
-    
 }
 
 void movDret(PImage b) {
+  
   //Colisió extrem Esquerre.
   if(velocitat > 1024-imgJugador[0].width){
     velocitat = velocitat -10;
@@ -130,8 +145,8 @@ void movimentPtg() {
    */
 
   //Linia a començar. 
-  var liniaInici = 5;
-  var liniafinal = 16;
+  int liniaInici = 5;
+  int liniafinal = 16;
 
   for (int j = liniaInici; j < liniafinal; j++) {
     lines[j].trim();
@@ -139,7 +154,7 @@ void movimentPtg() {
     espai = 0;
 
     //Omplim l'array amb strings buits.
-    for (var i = 0; i != coordfiltrades.length; i++) {
+    for (int i = 0; i != coordfiltrades.length; i++) {
       coordfiltrades[i] = "";
     }
 
