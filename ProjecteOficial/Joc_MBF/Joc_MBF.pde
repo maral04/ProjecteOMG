@@ -1,21 +1,10 @@
-import ddf.minim.effects.*;
-import ddf.minim.analysis.*;
-import ddf.minim.signals.*;
-import ddf.minim.spi.*;
-import ddf.minim.*;
-import ddf.minim.ugens.*;
-
-Minim minim;
-AudioPlayer song;
-
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
-
 
 
 PImage[] src = new PImage[3];
 PFont font;
 PImage[] backgroundimg = new PImage[4];
-PImage[] imgJugador = new PImage[11];
+PImage[] imgJugador = new PImage[16];
 
 boolean flipdone = false;
 boolean direccioEsquerre = false;
@@ -25,15 +14,16 @@ String coordptglinia;
 int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
-float velocitat = 15.0;
-int tipusMoviment = 0;
+int posicio = 15;
+int tipusMoviment = 5;
 boolean tipusMovimentChg = false;
+boolean salta = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
-int ptgx[] = new int[12];
-int ptgy[] = new int[12];
-int ptgw[] = new int[12];
-int ptgh[] = new int[12];
+int ptgx[] = new int[13];
+int ptgy[] = new int[13];
+int ptgw[] = new int[13];
+int ptgh[] = new int[13];
 
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
@@ -57,12 +47,8 @@ void setup() {
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
 
   //Càrrega dels sons.
-  minim = new Minim(this);
- 
-  // this loads mysong.wav from the data folder
-  song = minim.loadFile("Sound/leanon.mp3");
-  song.play();
-  
+
+
   //Atributs de la font
   font = loadFont("Arial, 16, true");
   fill(0);
@@ -76,60 +62,68 @@ void draw() {
 }
 
 void movDret(PImage b) {
-  
   //Colisió extrem Esquerre.
-  if(velocitat > 1024-imgJugador[0].width){
-    velocitat = velocitat -10;
+  if (posicio > 1024-imgJugador[0].width) {
+    posicio = posicio -10;
     movEsquerre(backgroundimg[2]);
-  }else{
+  } else {
     drawbackground(b);
     if (direccio == true) {
       scale(-1, 1);
       direccio = false;
     }
-    image(imgJugador[tipusMoviment], (velocitat), 50);
-    velocitat = velocitat + 4;
+    if (salta == true) {
+      tipusMoviment = 3;
+    }
+    image(imgJugador[tipusMoviment], (posicio), 50);
+    posicio = posicio + 4;
     canviImgPtgMvt();
   }
 }
 
 void movEsquerre(PImage b) {
   //Colisió extrem Dret.
-  if(velocitat < 0 ){
-    velocitat = velocitat +10;
+  if (posicio < 0 ) {
+    posicio = posicio +10;
     movDret(backgroundimg[2]);
-  }else{
+  } else {
     drawbackground(b);
     if (direccio == false) {
       scale(-1, 1);
       direccio = true;
     }
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-velocitat), 50);
-    velocitat = velocitat - 4;
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), 50);
+    posicio = posicio - 4;
     canviImgPtgMvt();
   }
 }
 
 //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
-void canviImgPtgMvt(){
-  
-  if(tipusMoviment < imgJugador.length-1){
+void canviImgPtgMvt() {
+
+  if (salta == true) {
+    tipusMoviment = 14;
+    salta = false;
+  } else {
+    if (tipusMoviment < imgJugador.length-1) {
       tipusMoviment++;
-  }else{
-      tipusMoviment = 0;
+    } else {
+      tipusMoviment = 5;
+    }
   }
 
-    //Moviment simple 3x.
-    /*if(tipusMoviment < 2 && tipusMovimentChg == false){
-      tipusMoviment++;
-    }else{
-      tipusMoviment--;
-      if(tipusMoviment == 0){
-        tipusMovimentChg = false;
-      }else{
-        tipusMovimentChg = true;
-      }
-    }*/
+
+  //Moviment simple 3x.
+  /*if(tipusMoviment < 2 && tipusMovimentChg == false){
+   tipusMoviment++;
+   }else{
+   tipusMoviment--;
+   if(tipusMoviment == 0){
+   tipusMovimentChg = false;
+   }else{
+   tipusMovimentChg = true;
+   }
+   }*/
 }
 
 void movimentPtg() {
@@ -138,14 +132,8 @@ void movimentPtg() {
   String[] lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
   noLoop();
 
-  /*
-  for (int i = 0; i < lines.length; i++) {
-   drawtry(lines[i], i);
-   }
-   */
-
   //Linia a començar. 
-  int liniaInici = 5;
+  int liniaInici = 0;
   int liniafinal = 16;
 
   for (int j = liniaInici; j < liniafinal; j++) {
@@ -182,14 +170,14 @@ void movimentPtg() {
     }
 
     //Pasem d'String a INT el contingut.
-    ptgx[j-5] = parseInt(coordfiltrades[0]);
-    ptgy[j-5] = parseInt(coordfiltrades[1]);
-    ptgw[j-5] = parseInt(coordfiltrades[2]);
-    ptgh[j-5] = parseInt(coordfiltrades[3]);
+    ptgx[j] = parseInt(coordfiltrades[0]);
+    ptgy[j] = parseInt(coordfiltrades[1]);
+    ptgw[j] = parseInt(coordfiltrades[2]);
+    ptgh[j] = parseInt(coordfiltrades[3]);
   }
 
   //Bucle que carrega els sectors de la sheet a un array d'imatges.
-  for (int i = 0; i < 11; i++) {
+  for (int i = liniaInici; i < liniafinal; i++) {
     imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
   }
 }
@@ -217,37 +205,121 @@ void keyPressed()
   {
     movDret(backgroundimg[2]);
   }
+  if (keyCode == UP || key == 'w' || key == 'W')
+  {
+    salta = true;
+  }
 }
 
-/*
-void keyPressed(){
- if(keys['a'] || keys['A']) { 
- //p2.move(-1,0); 
- //left = 1;
- //image(imgJugador[0], 20, 20);
- 
- }
- 
- if(keys['d'] || keys['D']) { 
- //p2.move(1,0); 
- //right = 1;
- //image(imgJugador[0], 20, 20);
- }
- 
- if(keys[' ']) { 
- //p2.move(-1,0); 
- println("spaace");
- }
- 
- 
- if(keys['w'] || keys['W']) { 
- //p2.move(0,-1); 
- 
- }
- if(keys['s'] || keys['S']) { 
- //p2.move(0,1); 
- 
- }
- 
- }
- */
+void keyReleased() {
+  if (keyCode == LEFT || key == 'a' || key == 'A')
+  {
+    movEsquerre(backgroundimg[2]);
+  }
+  if (keyCode == RIGHT || key == 'd' || key == 'D')
+  {
+    movDret(backgroundimg[2]);
+  }
+  if (keyCode == UP || key == 'w' || key == 'W')
+  {
+    salta = false;
+  }
+}
+
+class Player
+{
+
+  static final float gravity = 0.14;
+  static final float bounceVel = 6.1;
+  static final float maxYVel = 12;
+  static final float maxXVel = 2;
+
+  float x, y, xVel, yVel;
+  int w, h;
+  Player(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+    w = h = 20;
+  }
+
+  void display()
+  {
+    fill(204, 0, 0);
+    rect(x, y, w, h);
+  }
+
+  void move()
+  {
+    x += xVel;
+    y += yVel;
+
+    // wrap around
+    if (x > width-w) x = 0;
+    if (x < 0) x = width-w;
+
+    // horizontal
+    if (!gameOver)
+    {
+      if (aPressed) xVel -= 0.05;
+      else if (dPressed) xVel += 0.05;
+      else
+      {
+        if (xVel > 0) xVel -= 0.03;
+        else  xVel += 0.03;
+      }
+    }
+    if (abs(xVel) < 0.01) xVel = 0;
+    xVel = min(maxXVel, xVel);
+    xVel = max(-maxXVel, xVel);
+
+    // vertical
+    yVel += gravity;
+    yVel = min(maxYVel, yVel);
+    yVel = max(-maxYVel, yVel);
+  }
+
+
+  void collide(Platform p)
+  {
+    // standard rectangle intersections, but only for our lowest quarter
+    if (x         < p.x + p.w &&
+      x + w      > p.x       &&
+      y+h/2+h/4  < p.y + p.h &&
+      y + h      > p.y)
+    {
+      // but we only care about platforms when falling
+      if (yVel > 0) {
+        // for bouncing
+        yVel = -bounceVel;
+      }
+    }
+  }
+}
+
+class Platform
+{
+  float x, y, w, h;
+  float xvel, yvel;
+
+  Platform(int x, int y, int w, int h)
+  {
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+  }
+
+  void display()
+  {
+    fill(0);
+    rect(x, y, w, h);
+  }
+
+  void move()
+  {
+    x += xvel;
+    y += yvel;
+  }
+}
+
