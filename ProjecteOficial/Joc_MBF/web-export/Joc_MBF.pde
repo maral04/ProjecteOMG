@@ -29,9 +29,15 @@ int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
 
+final static short DIM = 100, SPD = 4, BOLD = 4;
+final static short FLOOR = 215, JUMP = 75;
+
+static int dir, x, y = FLOOR;
+var asd = 0;
+
 void setup() {
   size(1024, 512);
-  frameRate(8);
+  frameRate(7);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -53,12 +59,19 @@ void setup() {
   font = loadFont("Arial, 16, true");
   fill(0);
   textFont(font, 18);
+  
+  //Inicialització
+  movimentPtg();
+  movDret(backgroundimg[2]);
 }
 
 void draw() {
   drawbackground(backgroundimg[2]);
-  movimentPtg();
-  movDret(backgroundimg[2]);
+
+  if (dir != 0)  move();
+  rect(x, y, DIM, DIM);
+  
+  image(imgJugador[1], x+imgJugador[1].width, y+imgJugador[1].height);
 }
 
 void movDret(PImage b) {
@@ -98,6 +111,10 @@ void movEsquerre(PImage b) {
   }
 }
 
+void saltar(PImage b) {
+  canviImgPtgMvt();
+}
+
 //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
 void canviImgPtgMvt() {
 
@@ -130,7 +147,7 @@ void movimentPtg() {
   //Tría del personatge, 0-1.
   //Cárrega del .txt amb les coordenades linia per linia del personatge a l'Sprite Sheet.
   String[] lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
-  noLoop();
+  //noLoop();
 
   //Linia a començar. 
   int liniaInici = 0;
@@ -194,133 +211,153 @@ void drawtry(String printaa, int i) {
     text(printaa, 475, 225+((i-5)*22));
   }
 }
-
+/*
 void keyPressed()
-{
-  if (keyCode == LEFT || key == 'a' || key == 'A')
-  {
-    movEsquerre(backgroundimg[2]);
-  }
-  if (keyCode == RIGHT || key == 'd' || key == 'D')
-  {
-    movDret(backgroundimg[2]);
-  }
-  if (keyCode == UP || key == 'w' || key == 'W')
-  {
-    salta = true;
+ {
+ if (keyCode == RIGHT || key == 'd' || key == 'D'){
+ movDret(backgroundimg[2]);
+ }else{
+ if (keyCode == LEFT || key == 'a' || key == 'A'){
+ movEsquerre(backgroundimg[2]);
+ }
+ }
+ if (keyCode == UP || key == 'w' || key == 'W')
+ {
+ salta = true;
+ saltar(backgroundimg[2]);
+ }
+ }*/
+
+void keyPressed() {
+   if (keyCode == UP || key == 'w' || key == 'W')
+ {
+ salta = false;
+ if (dir == 0)  dir = -SPD;
+ }
+ 
+}
+
+static void move() {
+  if ((y += dir) < JUMP)  dir *= -1;
+
+  else if (y > FLOOR) {
+    dir = 0;
+    y = FLOOR;
   }
 }
 
+
+/*
 void keyReleased() {
-  if (keyCode == LEFT || key == 'a' || key == 'A')
-  {
-    movEsquerre(backgroundimg[2]);
-  }
-  if (keyCode == RIGHT || key == 'd' || key == 'D')
-  {
-    movDret(backgroundimg[2]);
-  }
-  if (keyCode == UP || key == 'w' || key == 'W')
-  {
-    salta = false;
-  }
-}
-
+ if (keyCode == LEFT || key == 'a' || key == 'A')
+ {
+ esquerre = false;
+ }
+ if (keyCode == RIGHT || key == 'd' || key == 'D')
+ {
+ dreta = false;
+ }
+ if (keyCode == UP || key == 'w' || key == 'W')
+ {
+ salta = false;
+ }
+ }*/
+/*
 class Player
-{
-
-  static final float gravity = 0.14;
-  static final float bounceVel = 6.1;
-  static final float maxYVel = 12;
-  static final float maxXVel = 2;
-
-  float x, y, xVel, yVel;
-  int w, h;
-  Player(int x, int y)
-  {
-    this.x = x;
-    this.y = y;
-    w = h = 20;
-  }
-
-  void display()
-  {
-    fill(204, 0, 0);
-    rect(x, y, w, h);
-  }
-
-  void move()
-  {
-    x += xVel;
-    y += yVel;
-
-    // wrap around
-    if (x > width-w) x = 0;
-    if (x < 0) x = width-w;
-
-    // horizontal
-    if (!gameOver)
-    {
-      if (aPressed) xVel -= 0.05;
-      else if (dPressed) xVel += 0.05;
-      else
-      {
-        if (xVel > 0) xVel -= 0.03;
-        else  xVel += 0.03;
-      }
-    }
-    if (abs(xVel) < 0.01) xVel = 0;
-    xVel = min(maxXVel, xVel);
-    xVel = max(-maxXVel, xVel);
-
-    // vertical
-    yVel += gravity;
-    yVel = min(maxYVel, yVel);
-    yVel = max(-maxYVel, yVel);
-  }
-
-
-  void collide(Platform p)
-  {
-    // standard rectangle intersections, but only for our lowest quarter
-    if (x         < p.x + p.w &&
-      x + w      > p.x       &&
-      y+h/2+h/4  < p.y + p.h &&
-      y + h      > p.y)
-    {
-      // but we only care about platforms when falling
-      if (yVel > 0) {
-        // for bouncing
-        yVel = -bounceVel;
-      }
-    }
-  }
-}
-
-class Platform
-{
-  float x, y, w, h;
-  float xvel, yvel;
-
-  Platform(int x, int y, int w, int h)
-  {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-  }
-
-  void display()
-  {
-    fill(0);
-    rect(x, y, w, h);
-  }
-
-  void move()
-  {
-    x += xvel;
-    y += yvel;
-  }
-}
-
+ {
+ 
+ static final float gravity = 0.14;
+ static final float bounceVel = 6.1;
+ static final float maxYVel = 12;
+ static final float maxXVel = 2;
+ 
+ float x, y, xVel, yVel;
+ int w, h;
+ Player(int x, int y)
+ {
+ this.x = x;
+ this.y = y;
+ w = h = 20;
+ }
+ 
+ void display()
+ {
+ fill(204, 0, 0);
+ rect(x, y, w, h);
+ }
+ 
+ void move()
+ {
+ x += xVel;
+ y += yVel;
+ 
+ // wrap around
+ if (x > width-w) x = 0;
+ if (x < 0) x = width-w;
+ 
+ // horizontal
+ if (!gameOver)
+ {
+ if (aPressed) xVel -= 0.05;
+ else if (dPressed) xVel += 0.05;
+ else
+ {
+ if (xVel > 0) xVel -= 0.03;
+ else  xVel += 0.03;
+ }
+ }
+ if (abs(xVel) < 0.01) xVel = 0;
+ xVel = min(maxXVel, xVel);
+ xVel = max(-maxXVel, xVel);
+ 
+ // vertical
+ yVel += gravity;
+ yVel = min(maxYVel, yVel);
+ yVel = max(-maxYVel, yVel);
+ }
+ 
+ 
+ void collide(Platform p)
+ {
+ // standard rectangle intersections, but only for our lowest quarter
+ if (x         < p.x + p.w &&
+ x + w      > p.x       &&
+ y+h/2+h/4  < p.y + p.h &&
+ y + h      > p.y)
+ {
+ // but we only care about platforms when falling
+ if (yVel > 0) {
+ // for bouncing
+ yVel = -bounceVel;
+ }
+ }
+ }
+ }
+ 
+ class Platform
+ {
+ float x, y, w, h;
+ float xvel, yvel;
+ 
+ Platform(int x, int y, int w, int h)
+ {
+ this.x = x;
+ this.y = y;
+ this.w = w;
+ this.h = h;
+ }
+ 
+ void display()
+ {
+ fill(0);
+ rect(x, y, w, h);
+ }
+ 
+ void move()
+ {
+ x += xvel;
+ y += yvel;
+ }
+ }
+ */
 
