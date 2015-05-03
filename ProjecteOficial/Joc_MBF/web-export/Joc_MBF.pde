@@ -6,7 +6,7 @@ PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 
 boolean flipdone = false;
-boolean direccio = false;
+boolean direccio = true;
 String coordptglinia;
 int espai;
 char chardins;
@@ -64,10 +64,10 @@ void draw() {
     dir = posicioSalt; 
     y = posicioSalt;
   }
-  if (dreta == true) {
+  if (dreta == true && esquerre != true) {
     movDret(backgroundimg[2]);
   }
-  if (esquerre == true) {
+  if (esquerre == true && dreta != true) {
     movEsquerre(backgroundimg[2]);
   }
   if (dir != 0) {
@@ -93,7 +93,17 @@ static void movSalt() {
   if (y == posicioSalt) {
     tipusMoviment = 5;
   }
-  image(imgJugador[tipusMoviment], (posicio), (y));
+
+  if (direccio == false) {
+    //Salt quiet a l'esquerra.
+    if(esquerre == false){
+      scale(-1, 1);
+    }
+    //Salt en moviment a l'esquerra.
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+  } else {
+    image(imgJugador[tipusMoviment], (posicio), (y));
+  }
   //console.log(posicio+" "+posicioSalt);
 }
 
@@ -107,12 +117,9 @@ void movDret(PImage b) {
   //Colisió extrem Esquerre.
   if (posicio > 1024-imgJugador[5].width) {
     posicio = posicio -10;
+    scale(-1, 1);
     movEsquerre(backgroundimg[2]);
   } else {
-        if (direccio == true) {
-        scale(-1, 1);
-        direccio = false;
-      }
     bothMoviments(b);
     image(imgJugador[tipusMoviment], posicio, posicioSalt);
     posicio = posicio + 3;
@@ -121,40 +128,33 @@ void movDret(PImage b) {
 
 void movEsquerre(PImage b) {
   //Colisió extrem Dret.
-  if (posicio < 0 ) {
+  if (posicio < 0) {
     posicio = posicio +10;
+    scale(-1, 1);
     movDret(backgroundimg[2]);
   } else {
-    //scale(-1,1);
-    if (direccio == false) {
-        scale(-1, 1);
-        direccio = true;
-      }
     bothMoviments(b);
     //image(imgJugador[tipusMoviment], posicio, posicioSalt);
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), 50);
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
     posicio = posicio - 3;
   }
 }
 
 void bothMoviments(PImage b) {
-  drawbackground(b);
-  if (salta == true) {
-    tipusMoviment = 3;
-    salta = false;
-  } else {
-    canviImgPtgMvt();
+  if (esquerre == true) {
+    scale(-1, 1);
   }
+  //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
+  if (salta != true) {
+    if (tipusMoviment < imgJugador.length-1) {
+      tipusMoviment++;
+    } else {
+      tipusMoviment = 5;
+    }
+  }
+  drawbackground(b);
 }
 
-//Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
-void canviImgPtgMvt() {
-  if (tipusMoviment < imgJugador.length-1) {
-    tipusMoviment++;
-  } else {
-    tipusMoviment = 5;
-  }
-}
 
 void movimentPtg() {
   //Tría del personatge, 0-1.
@@ -220,12 +220,12 @@ void drawbackground(PImage b) {
 void keyPressed()
 {
   if (keyCode == RIGHT || key == 'd' || key == 'D') {
-    //movDret(backgroundimg[2]);
     dreta = true;
+    direccio = true;
   }
   if (keyCode == LEFT || key == 'a' || key == 'A') {
-    //movEsquerre(backgroundimg[2]);
     esquerre = true;
+    direccio = false;
   }
   if (keyCode == UP || key == 'w' || key == 'W') {
     salta = true;
