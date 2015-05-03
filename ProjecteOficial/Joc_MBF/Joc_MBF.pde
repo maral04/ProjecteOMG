@@ -6,15 +6,13 @@ PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 
 boolean flipdone = false;
-boolean direccioEsquerre = false;
-boolean direccioDreta = true;
 boolean direccio = false;
 String coordptglinia;
 int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
 int posicio = 15;
-int posicioSalt = 100;
+int posicioSalt = 375;
 int tipusMoviment = 5;
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
@@ -76,13 +74,14 @@ void draw() {
     tipusMoviment = 3;
     drawbackground(backgroundimg[2]);
     movSalt();
-    console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
+    //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
+  } else {
+    salta = false;
   }
 }
 
 static void movSalt() {
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
-
     dir = dir*-1;
   } else {
     if (y > posicioSalt) {
@@ -90,8 +89,12 @@ static void movSalt() {
       y = posicioSalt;
     }
   }
+  //Torna a possar-se de peu.
+  if (y == posicioSalt) {
+    tipusMoviment = 5;
+  }
   image(imgJugador[tipusMoviment], (posicio), (y));
-  console.log(posicio+" "+posicioSalt);
+  //console.log(posicio+" "+posicioSalt);
 }
 
 void inici() {
@@ -102,22 +105,16 @@ void inici() {
 
 void movDret(PImage b) {
   //Colisió extrem Esquerre.
-  if (posicio > 1024-imgJugador[0].width) {
+  if (posicio > 1024-imgJugador[5].width) {
     posicio = posicio -10;
     movEsquerre(backgroundimg[2]);
   } else {
-    drawbackground(b);
-    if (salta == true) {
-      tipusMoviment = 3;
-      salta = false;
-    } else {
-      if (direccio == true) {
+        if (direccio == true) {
         scale(-1, 1);
         direccio = false;
       }
-      canviImgPtgMvt();
-    }
-    image(imgJugador[tipusMoviment], (posicio), posicioSalt);
+    bothMoviments(b);
+    image(imgJugador[tipusMoviment], posicio, posicioSalt);
     posicio = posicio + 3;
   }
 }
@@ -128,22 +125,27 @@ void movEsquerre(PImage b) {
     posicio = posicio +10;
     movDret(backgroundimg[2]);
   } else {
-    drawbackground(b);
-    if (salta == true) {
-
-      salta = false;
-    } else {
-      if (direccio == false) {
+    //scale(-1,1);
+    if (direccio == false) {
         scale(-1, 1);
         direccio = true;
       }
-      canviImgPtgMvt();
-    }
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
+    bothMoviments(b);
+    //image(imgJugador[tipusMoviment], posicio, posicioSalt);
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), 50);
     posicio = posicio - 3;
   }
 }
 
+void bothMoviments(PImage b) {
+  drawbackground(b);
+  if (salta == true) {
+    tipusMoviment = 3;
+    salta = false;
+  } else {
+    canviImgPtgMvt();
+  }
+}
 
 //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
 void canviImgPtgMvt() {
@@ -250,61 +252,7 @@ void keyReleased() {
    }*/
 }
 /*
-class Player
- {
- 
- static final float gravity = 0.14;
- static final float bounceVel = 6.1;
- static final float maxYVel = 12;
- static final float maxXVel = 2;
- 
- float x, y, xVel, yVel;
- int w, h;
- Player(int x, int y)
- {
- this.x = x;
- this.y = y;
- w = h = 20;
- }
- 
- void display()
- {
- fill(204, 0, 0);
- rect(x, y, w, h);
- }
- 
- void move()
- {
- x += xVel;
- y += yVel;
- 
- // wrap around
- if (x > width-w) x = 0;
- if (x < 0) x = width-w;
- 
- // horizontal
- if (!gameOver)
- {
- if (aPressed) xVel -= 0.05;
- else if (dPressed) xVel += 0.05;
- else
- {
- if (xVel > 0) xVel -= 0.03;
- else  xVel += 0.03;
- }
- }
- if (abs(xVel) < 0.01) xVel = 0;
- xVel = min(maxXVel, xVel);
- xVel = max(-maxXVel, xVel);
- 
- // vertical
- yVel += gravity;
- yVel = min(maxYVel, yVel);
- yVel = max(-maxYVel, yVel);
- }
- 
- 
- void collide(Platform p)
+void collide(Platform p)
  {
  // standard rectangle intersections, but only for our lowest quarter
  if (x         < p.x + p.w &&
