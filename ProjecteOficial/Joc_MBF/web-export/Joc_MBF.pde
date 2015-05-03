@@ -1,6 +1,5 @@
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
-
 PImage[] src = new PImage[3];
 PFont font;
 PImage[] backgroundimg = new PImage[4];
@@ -15,9 +14,13 @@ int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
 int posicio = 15;
+int posicioSalt = 100;
 int tipusMoviment = 5;
 boolean tipusMovimentChg = false;
+boolean iniciar = true;
 boolean salta = false;
+boolean dreta = false;
+boolean esquerre = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[13];
@@ -28,16 +31,12 @@ int ptgh[] = new int[13];
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
-
-final static short DIM = 100, SPD = 4, BOLD = 4;
-final static short FLOOR = 215, JUMP = 75;
-
-static int dir, x, y = FLOOR;
-var asd = 0;
+int SPD = 7;
+int dir, y;
 
 void setup() {
   size(1024, 512);
-  frameRate(7);
+  //frameRate(7);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -59,19 +58,46 @@ void setup() {
   font = loadFont("Arial, 16, true");
   fill(0);
   textFont(font, 18);
-  
-  //Inicialització
-  movimentPtg();
-  movDret(backgroundimg[2]);
 }
 
 void draw() {
-  drawbackground(backgroundimg[2]);
+  if (iniciar == true) {
+    inici();
+    dir = posicioSalt; 
+    y = posicioSalt;
+  }
+  if (dreta == true) {
+    movDret(backgroundimg[2]);
+  }
+  if (esquerre == true) {
+    movEsquerre(backgroundimg[2]);
+  }
+  if (dir != 0) {
+    tipusMoviment = 3;
+    drawbackground(backgroundimg[2]);
+    movSalt();
+    console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
+  }
+}
 
-  if (dir != 0)  move();
-  rect(x, y, DIM, DIM);
-  
-  image(imgJugador[1], x+imgJugador[1].width, y+imgJugador[1].height);
+static void movSalt() {
+  if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
+
+    dir = dir*-1;
+  } else {
+    if (y > posicioSalt) {
+      dir = 0;
+      y = posicioSalt;
+    }
+  }
+  image(imgJugador[tipusMoviment], (posicio), (y));
+  console.log(posicio+" "+posicioSalt);
+}
+
+void inici() {
+  movimentPtg();
+  movDret(backgroundimg[2]);
+  iniciar = false;
 }
 
 void movDret(PImage b) {
@@ -81,16 +107,18 @@ void movDret(PImage b) {
     movEsquerre(backgroundimg[2]);
   } else {
     drawbackground(b);
-    if (direccio == true) {
-      scale(-1, 1);
-      direccio = false;
-    }
     if (salta == true) {
       tipusMoviment = 3;
+      salta = false;
+    } else {
+      if (direccio == true) {
+        scale(-1, 1);
+        direccio = false;
+      }
+      canviImgPtgMvt();
     }
-    image(imgJugador[tipusMoviment], (posicio), 50);
-    posicio = posicio + 4;
-    canviImgPtgMvt();
+    image(imgJugador[tipusMoviment], (posicio), posicioSalt);
+    posicio = posicio + 3;
   }
 }
 
@@ -101,46 +129,29 @@ void movEsquerre(PImage b) {
     movDret(backgroundimg[2]);
   } else {
     drawbackground(b);
-    if (direccio == false) {
-      scale(-1, 1);
-      direccio = true;
+    if (salta == true) {
+
+      salta = false;
+    } else {
+      if (direccio == false) {
+        scale(-1, 1);
+        direccio = true;
+      }
+      canviImgPtgMvt();
     }
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), 50);
-    posicio = posicio - 4;
-    canviImgPtgMvt();
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
+    posicio = posicio - 3;
   }
 }
 
-void saltar(PImage b) {
-  canviImgPtgMvt();
-}
 
 //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
 void canviImgPtgMvt() {
-
-  if (salta == true) {
-    tipusMoviment = 14;
-    salta = false;
+  if (tipusMoviment < imgJugador.length-1) {
+    tipusMoviment++;
   } else {
-    if (tipusMoviment < imgJugador.length-1) {
-      tipusMoviment++;
-    } else {
-      tipusMoviment = 5;
-    }
+    tipusMoviment = 5;
   }
-
-
-  //Moviment simple 3x.
-  /*if(tipusMoviment < 2 && tipusMovimentChg == false){
-   tipusMoviment++;
-   }else{
-   tipusMoviment--;
-   if(tipusMoviment == 0){
-   tipusMovimentChg = false;
-   }else{
-   tipusMovimentChg = true;
-   }
-   }*/
 }
 
 void movimentPtg() {
@@ -149,7 +160,7 @@ void movimentPtg() {
   String[] lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
   //noLoop();
 
-  //Linia a començar. 
+  //Linia a començar.
   int liniaInici = 0;
   int liniafinal = 16;
 
@@ -204,64 +215,40 @@ void drawbackground(PImage b) {
   background(b);
 }
 
-void drawtry(String printaa, int i) {
-  if (i < 5) {
-    text(printaa, 255, 225+(i*22));
-  } else {
-    text(printaa, 475, 225+((i-5)*22));
-  }
-}
-/*
 void keyPressed()
- {
- if (keyCode == RIGHT || key == 'd' || key == 'D'){
- movDret(backgroundimg[2]);
- }else{
- if (keyCode == LEFT || key == 'a' || key == 'A'){
- movEsquerre(backgroundimg[2]);
- }
- }
- if (keyCode == UP || key == 'w' || key == 'W')
- {
- salta = true;
- saltar(backgroundimg[2]);
- }
- }*/
-
-void keyPressed() {
-   if (keyCode == UP || key == 'w' || key == 'W')
- {
- salta = false;
- if (dir == 0)  dir = -SPD;
- }
- 
-}
-
-static void move() {
-  if ((y += dir) < JUMP)  dir *= -1;
-
-  else if (y > FLOOR) {
-    dir = 0;
-    y = FLOOR;
+{
+  if (keyCode == RIGHT || key == 'd' || key == 'D') {
+    //movDret(backgroundimg[2]);
+    dreta = true;
+  }
+  if (keyCode == LEFT || key == 'a' || key == 'A') {
+    //movEsquerre(backgroundimg[2]);
+    esquerre = true;
+  }
+  if (keyCode == UP || key == 'w' || key == 'W') {
+    salta = true;
+    if (dir == 0) {
+      dir = -SPD;
+      //println("asd"+dir);
+    }
   }
 }
 
-
-/*
 void keyReleased() {
- if (keyCode == LEFT || key == 'a' || key == 'A')
- {
- esquerre = false;
- }
- if (keyCode == RIGHT || key == 'd' || key == 'D')
- {
- dreta = false;
- }
- if (keyCode == UP || key == 'w' || key == 'W')
- {
- salta = false;
- }
- }*/
+  if (keyCode == RIGHT || key == 'd' || key == 'D')
+  {
+    dreta = false;
+  }
+  if (keyCode == LEFT || key == 'a' || key == 'A')
+  {
+    esquerre = false;
+  }
+  /*
+  if (keyCode == UP || key == 'w' || key == 'W')
+   {
+   salta = false;
+   }*/
+}
 /*
 class Player
  {
