@@ -95,16 +95,19 @@ static void movSalt() {
   }
 
   if (direccio == false) {
+    dreta = false;
     //Salt quiet a l'esquerra.
-    if(esquerre == false){
+    if (esquerre == false) {
       scale(-1, 1);
     }
+
     //Salt en moviment a l'esquerra.
     image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+    //image(imgJugador[tipusMoviment], (posicio), (y));
   } else {
     image(imgJugador[tipusMoviment], (posicio), (y));
   }
-  //console.log(posicio+" "+posicioSalt);
+  //console.log(((-imgJugador[tipusMoviment].width)-posicio)+" "+posicio+" "+y);
 }
 
 void inici() {
@@ -116,7 +119,7 @@ void inici() {
 void movDret(PImage b) {
   //Colisió extrem Esquerre.
   if (posicio > 1024-imgJugador[5].width) {
-    posicio = posicio -10;
+    posicio = posicio - imgJugador[tipusMoviment].width/2;
     scale(-1, 1);
     movEsquerre(backgroundimg[2]);
   } else {
@@ -129,23 +132,22 @@ void movDret(PImage b) {
 void movEsquerre(PImage b) {
   //Colisió extrem Dret.
   if (posicio < 0) {
-    posicio = posicio +10;
+    posicio = posicio + imgJugador[tipusMoviment].width/2;
     scale(-1, 1);
     movDret(backgroundimg[2]);
   } else {
     bothMoviments(b);
-    //image(imgJugador[tipusMoviment], posicio, posicioSalt);
     image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
     posicio = posicio - 3;
   }
 }
 
 void bothMoviments(PImage b) {
-  if (esquerre == true) {
+  if ((esquerre == true)) {
     scale(-1, 1);
   }
   //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
-  if (salta != true) {
+  if (salta == false) {
     if (tipusMoviment < imgJugador.length-1) {
       tipusMoviment++;
     } else {
@@ -231,7 +233,6 @@ void keyPressed()
     salta = true;
     if (dir == 0) {
       dir = -SPD;
-      //println("asd"+dir);
     }
   }
 }
@@ -245,11 +246,10 @@ void keyReleased() {
   {
     esquerre = false;
   }
-  /*
   if (keyCode == UP || key == 'w' || key == 'W')
-   {
-   salta = false;
-   }*/
+  {
+    salta = false;
+  }
 }
 /*
 void collide(Platform p)
