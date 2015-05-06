@@ -72,7 +72,6 @@ void draw() {
   }
   if (dir != 0) {
     tipusMoviment = 3;
-    drawbackground(backgroundimg[2]);
     movSalt();
     //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
   } else {
@@ -81,6 +80,7 @@ void draw() {
 }
 
 static void movSalt() {
+  drawbackground(backgroundimg[2]);
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
     dir = dir*-1;
   } else {
@@ -153,10 +153,9 @@ void bothMoviments(PImage b) {
     } else {
       tipusMoviment = 5;
     }
+    drawbackground(b);
   }
-  drawbackground(b);
 }
-
 
 void movimentPtg() {
   //Tría del personatge, 0-1.
