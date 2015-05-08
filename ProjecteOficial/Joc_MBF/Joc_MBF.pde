@@ -4,6 +4,7 @@ PImage[] src = new PImage[3];
 PFont font;
 PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
+PImage[] imgGrass = new PImage[4];
 
 boolean flipdone = false;
 boolean direccio = true;
@@ -49,6 +50,15 @@ void setup() {
   backgroundimg[2] = loadImage("Visual/Background/bg_grasslands.png");
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
 
+  //Càrrega del terre/plataformes.
+  imgGrass[0] = loadImage("Visual/Grass/grassHalf_left.png");
+  //imgGrass[4] = imgGrass[0].resize(50);
+  //imgGrass[4] = imgGrass[0].resize(imgGrass[0].width/2);
+  //imgGrass[0] = imgGrass[4];
+  imgGrass[1] = loadImage("Visual/Grass/grassHalf_mid.png");
+  imgGrass[2] = loadImage("Visual/Grass/grassHalf_right.png");
+  
+    
   //Càrrega dels sons.
 
 
@@ -59,6 +69,8 @@ void setup() {
 }
 
 void draw() {
+  //platformndBackground(backgroundimg[2]);
+  
   if (iniciar == true) {
     inici();
     dir = posicioSalt; 
@@ -79,8 +91,23 @@ void draw() {
   }
 }
 
+//Posa l'imatge al background així com les plataformes.
+static void platformndBackground(PImage b){
+  background(b);
+  if(esquerre == true){
+    image(imgGrass[2], -imgGrass[0].width-50, 50);
+    //popMatrix();
+    //scale(0);
+    //image(imgGrass[0], 50, 50);
+    //pushMatrix();
+    //
+  }else{
+    image(imgGrass[0], 50, 50);
+  }
+}
+
 static void movSalt() {
-  drawbackground(backgroundimg[2]);
+  platformndBackground(backgroundimg[2]);
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
     dir = dir*-1;
   } else {
@@ -153,7 +180,7 @@ void bothMoviments(PImage b) {
     } else {
       tipusMoviment = 5;
     }
-    drawbackground(b);
+    platformndBackground(b);
   }
 }
 
@@ -211,11 +238,6 @@ void movimentPtg() {
   for (int i = liniaInici; i < liniafinal; i++) {
     imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
   }
-}
-
-//Posa l'imatge al background.
-void drawbackground(PImage b) {
-  background(b);
 }
 
 void keyPressed()
