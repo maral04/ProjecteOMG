@@ -31,7 +31,7 @@ int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
 int SPD = 7;
-int dir, y;
+int dir, y = posicioSalt;
 
 void setup() {
   size(1024, 512);
@@ -57,8 +57,8 @@ void setup() {
   //imgGrass[0] = imgGrass[4];
   imgGrass[1] = loadImage("Visual/Grass/grassHalf_mid.png");
   imgGrass[2] = loadImage("Visual/Grass/grassHalf_right.png");
-  
-    
+
+
   //Càrrega dels sons.
 
 
@@ -66,15 +66,14 @@ void setup() {
   font = loadFont("Arial, 16, true");
   fill(0);
   textFont(font, 18);
+  
 }
 
 void draw() {
   //platformndBackground(backgroundimg[2]);
-  
+  pushMatrix();
   if (iniciar == true) {
     inici();
-    dir = posicioSalt; 
-    y = posicioSalt;
   }
   if (dreta == true && esquerre != true) {
     movDret(backgroundimg[2]);
@@ -92,21 +91,16 @@ void draw() {
 }
 
 //Posa l'imatge al background així com les plataformes.
-static void platformndBackground(PImage b){
+void platformndBackground(PImage b) {
   background(b);
-  if(esquerre == true){
-    image(imgGrass[2], -imgGrass[0].width-50, 50);
-    //popMatrix();
-    //scale(0);
-    //image(imgGrass[0], 50, 50);
-    //pushMatrix();
-    //
-  }else{
-    image(imgGrass[0], 50, 50);
+  popMatrix();
+  image(imgGrass[0], 50, 50);
+  if (esquerre == true) {
+    scale(-1, 1);
   }
 }
 
-static void movSalt() {
+void movSalt() {
   platformndBackground(backgroundimg[2]);
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
     dir = dir*-1;
@@ -126,11 +120,14 @@ static void movSalt() {
     //Salt quiet a l'esquerra.
     if (esquerre == false) {
       scale(-1, 1);
+      image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+      //popMatrix();
+    }else{
+    //popMatrix();
     }
-
     //Salt en moviment a l'esquerra.
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
-    //image(imgJugador[tipusMoviment], (posicio), (y));
+    //image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+    image(imgJugador[tipusMoviment], (posicio), (y));
   } else {
     image(imgJugador[tipusMoviment], (posicio), (y));
   }
@@ -147,7 +144,7 @@ void movDret(PImage b) {
   //Colisió extrem Esquerre.
   if (posicio > 1024-imgJugador[5].width) {
     posicio = posicio - imgJugador[tipusMoviment].width/2;
-    scale(-1, 1);
+    //scale(-1, 1);
     movEsquerre(backgroundimg[2]);
   } else {
     bothMoviments(b);
@@ -160,18 +157,23 @@ void movEsquerre(PImage b) {
   //Colisió extrem Dret.
   if (posicio < 0) {
     posicio = posicio + imgJugador[tipusMoviment].width/2;
-    scale(-1, 1);
+    //scale(-1, 1);
+    popMatrix();
     movDret(backgroundimg[2]);
   } else {
-    bothMoviments(b);
-    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
-    posicio = posicio - 3;
+    //if (salta == false) {
+      bothMoviments(b);
+      image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
+      posicio = posicio - 3;
+    //}
   }
 }
 
 void bothMoviments(PImage b) {
-  if ((esquerre == true)) {
+  if (esquerre == true) {
     scale(-1, 1);
+  } else {
+    popMatrix();
   }
   //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
   if (salta == false) {
