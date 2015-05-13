@@ -20,7 +20,7 @@ $(document).ready(function (){
 /*  GET TWEETS
 /*-----------------------------------------------------------------------------------*/
   $(".tweet").tweet({
-    username: "jalberto13", //change this to your twitter username
+    username: "maral04", //change this to your twitter username
     join_text: "auto",
     avatar_size: 0, //show avatar?
     count: 1,       //number of tweets to display
