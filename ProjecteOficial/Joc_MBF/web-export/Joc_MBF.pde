@@ -96,7 +96,7 @@ void platformndBackground(PImage b) {
   popMatrix();
   image(imgGrass[0], 50, 50);
   if (esquerre == true) {
-    scale(-1, 1);
+    //scale(-1, 1); //Al canviar-ho es trauma hard.
   }
 }
 
