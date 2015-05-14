@@ -12,8 +12,8 @@ String coordptglinia;
 int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
-int posicio = 15;
-int posicioSalt = 375;
+int posicio = 25;
+int posicioSalt = 362;
 int tipusMoviment = 5;
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
@@ -26,6 +26,13 @@ int ptgx[] = new int[13];
 int ptgy[] = new int[13];
 int ptgw[] = new int[13];
 int ptgh[] = new int[13];
+
+//Posició de les plataformes.
+int xGrass = posicio;
+int yGrass;
+
+float scaleX;
+float scaleY;
 
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
@@ -66,12 +73,11 @@ void setup() {
   font = loadFont("Arial, 16, true");
   fill(0);
   textFont(font, 18);
-  
 }
 
 void draw() {
   //platformndBackground(backgroundimg[2]);
-  pushMatrix();
+  //pushMatrix();
   if (iniciar == true) {
     inici();
   }
@@ -90,14 +96,39 @@ void draw() {
   }
 }
 
-//Posa l'imatge al background així com les plataformes.
+//Posa l'imatge al background així com les plataformes del nivell dessitjat.
 void platformndBackground(PImage b) {
   background(b);
+
+  //if(){
+  
+  scaleX = 0.6;
+  scaleY = 0.6;
+    
+  pushMatrix();
+  scale(scaleX,scaleY);
+
+  xGrass = 10/scaleX;
+  yGrass = 450/scaleY;
+
+  image(imgGrass[0], xGrass, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width), yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*2, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*3, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*4, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*5, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*6, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*7, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*8, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*9, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*10, yGrass);
+  image(imgGrass[1], xGrass+(imgGrass[0].width)*11, yGrass);
+  image(imgGrass[2], xGrass+(imgGrass[0].width)*12, yGrass);
+  
   popMatrix();
-  image(imgGrass[0], 50, 50);
-  if (esquerre == true) {
-    //scale(-1, 1); //Al canviar-ho es trauma hard.
-  }
+  
+  
+  //}
 }
 
 void movSalt() {
@@ -121,17 +152,16 @@ void movSalt() {
     if (esquerre == false) {
       scale(-1, 1);
       image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
-      //popMatrix();
-    }else{
-    //popMatrix();
+      scale(-1, 1);
+    } else {
+      //Salt moviment a l'esquerra.
+      scale(-1, 1);
+      image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+      scale(-1, 1);
     }
-    //Salt en moviment a l'esquerra.
-    //image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
-    image(imgJugador[tipusMoviment], (posicio), (y));
   } else {
     image(imgJugador[tipusMoviment], (posicio), (y));
   }
-  //console.log(((-imgJugador[tipusMoviment].width)-posicio)+" "+posicio+" "+y);
 }
 
 void inici() {
@@ -144,7 +174,6 @@ void movDret(PImage b) {
   //Colisió extrem Esquerre.
   if (posicio > 1024-imgJugador[5].width) {
     posicio = posicio - imgJugador[tipusMoviment].width/2;
-    //scale(-1, 1);
     movEsquerre(backgroundimg[2]);
   } else {
     bothMoviments(b);
@@ -157,24 +186,17 @@ void movEsquerre(PImage b) {
   //Colisió extrem Dret.
   if (posicio < 0) {
     posicio = posicio + imgJugador[tipusMoviment].width/2;
-    //scale(-1, 1);
-    popMatrix();
     movDret(backgroundimg[2]);
   } else {
-    //if (salta == false) {
-      bothMoviments(b);
-      image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
-      posicio = posicio - 3;
-    //}
+    bothMoviments(b);
+    scale(-1, 1);
+    image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
+    scale(-1, 1);
+    posicio = posicio - 3;
   }
 }
 
 void bothMoviments(PImage b) {
-  if (esquerre == true) {
-    scale(-1, 1);
-  } else {
-    popMatrix();
-  }
   //Fa l'efecte de moviment al canviar l'imatge del personatge, cames braços etc..
   if (salta == false) {
     if (tipusMoviment < imgJugador.length-1) {
