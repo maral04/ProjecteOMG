@@ -5,6 +5,7 @@ PFont font;
 PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 PImage[] imgGrass = new PImage[4];
+PImage[] imgStone = new PImage[4];
 
 boolean flipdone = false;
 boolean direccio = true;
@@ -13,13 +14,16 @@ int espai;
 char chardins;
 String[] coordfiltrades = new String[4];
 int posicio = 25;
-int posicioSalt = 362;
+int posicioSalt = 346;
 int tipusMoviment = 5;
+int level = 0; //Pantalla, 0 = tutorial.
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
 boolean salta = false;
 boolean dreta = false;
 boolean esquerre = false;
+boolean tipusbug;
+boolean debugactiu = true;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[13];
@@ -28,8 +32,8 @@ int ptgw[] = new int[13];
 int ptgh[] = new int[13];
 
 //Posició de les plataformes.
-int xGrass = posicio;
-int yGrass;
+int xPlatform = posicio;
+int yPlatform;
 
 float scaleX;
 float scaleY;
@@ -58,12 +62,9 @@ void setup() {
   backgroundimg[3] = loadImage("Visual/Background/bg_shroom.png");
 
   //Càrrega del terre/plataformes.
-  imgGrass[0] = loadImage("Visual/Grass/grassHalf_left.png");
-  //imgGrass[4] = imgGrass[0].resize(50);
-  //imgGrass[4] = imgGrass[0].resize(imgGrass[0].width/2);
-  //imgGrass[0] = imgGrass[4];
-  imgGrass[1] = loadImage("Visual/Grass/grassHalf_mid.png");
-  imgGrass[2] = loadImage("Visual/Grass/grassHalf_right.png");
+  imgGrass[0] = loadImage("Visual/Mapa/Grass/grassHalf_left.png");
+  imgGrass[1] = loadImage("Visual/Mapa/Grass/grassHalf_mid.png");
+  imgGrass[2] = loadImage("Visual/Mapa/Grass/grassHalf_right.png");
 
 
   //Càrrega dels sons.
@@ -100,34 +101,59 @@ void draw() {
 void platformndBackground(PImage b) {
   background(b);
 
+  //Fer switch case de levels.
   //if(){
-  
+
   scaleX = 0.6;
   scaleY = 0.6;
-    
+
   pushMatrix();
-  scale(scaleX,scaleY);
+  scale(scaleX, scaleY);
 
-  xGrass = 10/scaleX;
-  yGrass = 450/scaleY;
+  xPlatform = 14/scaleX;
+  yPlatform = 435/scaleY;
 
-  image(imgGrass[0], xGrass, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width), yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*2, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*3, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*4, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*5, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*6, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*7, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*8, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*9, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*10, yGrass);
-  image(imgGrass[1], xGrass+(imgGrass[0].width)*11, yGrass);
-  image(imgGrass[2], xGrass+(imgGrass[0].width)*12, yGrass);
-  
+  image(imgGrass[0], xPlatform, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width), yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*2, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*3, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*4, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*5, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*6, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*7, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*8, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*9, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*10, yPlatform);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*11, yPlatform);
+  image(imgGrass[2], xPlatform+(imgGrass[0].width)*12, yPlatform);
+
+  image(imgGrass[0], xPlatform+(imgGrass[0].width)*3, yPlatform-85);
+  image(imgGrass[2], xPlatform+(imgGrass[0].width)*4, yPlatform-85);
+
+  image(imgGrass[0], xPlatform+(imgGrass[0].width)*5, yPlatform-250);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*6, yPlatform-250);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*7, yPlatform-250);
+  image(imgGrass[2], xPlatform+(imgGrass[0].width)*8, yPlatform-250);
+
+
+  image(imgGrass[0], xPlatform+(imgGrass[0].width)*8, yPlatform-125);
+  image(imgGrass[1], xPlatform+(imgGrass[0].width)*9, yPlatform-125);
+  image(imgGrass[2], xPlatform+(imgGrass[0].width)*10, yPlatform-125);
+
+  //Si està en la plataforma que va des de
+  //xPlatform+(imgGrass[0].width)*8, yPlatform-125
+  //fins al punt
+  //xPlatform+(imgGrass[0].width)*10, yPlatform-125
+  //no cau, a la que surt, cau.
+
+
+  if (salta == true) {
+    posicioSalt = /*posicioSalt + */((yPlatform-125)-10)/2;
+  }
+
   popMatrix();
-  
-  
+
+
   //}
 }
 
@@ -151,15 +177,18 @@ void movSalt() {
     //Salt quiet a l'esquerra.
     if (esquerre == false) {
       scale(-1, 1);
+      debugspc(false);
       image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
       scale(-1, 1);
     } else {
       //Salt moviment a l'esquerra.
       scale(-1, 1);
+      debugspc(false);
       image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
       scale(-1, 1);
     }
   } else {
+    debugspc(true);
     image(imgJugador[tipusMoviment], (posicio), (y));
   }
 }
@@ -177,6 +206,7 @@ void movDret(PImage b) {
     movEsquerre(backgroundimg[2]);
   } else {
     bothMoviments(b);
+    debugspc(true);
     image(imgJugador[tipusMoviment], posicio, posicioSalt);
     posicio = posicio + 3;
   }
@@ -190,6 +220,7 @@ void movEsquerre(PImage b) {
   } else {
     bothMoviments(b);
     scale(-1, 1);
+    debugspc(false);
     image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), posicioSalt);
     scale(-1, 1);
     posicio = posicio - 3;
@@ -261,6 +292,16 @@ void movimentPtg() {
   //Bucle que carrega els sectors de la sheet a un array d'imatges.
   for (int i = liniaInici; i < liniafinal; i++) {
     imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
+  }
+}
+
+void debugspc(boolean tipusbuggaso) {
+  if (debugactiu == true) {
+    if (tipusbuggaso == true) {
+      rect((posicio), (y), imgJugador[tipusMoviment].width, imgJugador[tipusMoviment].height );
+    } else {
+      rect(((-imgJugador[tipusMoviment].width)-posicio), (y), imgJugador[tipusMoviment].width, imgJugador[tipusMoviment].height );
+    }
   }
 }
 
