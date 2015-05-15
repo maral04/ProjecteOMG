@@ -15,6 +15,7 @@ char chardins;
 String[] coordfiltrades = new String[4];
 int posicio = 25;
 int posicioSalt = 346;
+int posicioSalttmp = posicioSalt;
 int tipusMoviment = 5;
 int level = 0; //Pantalla, 0 = tutorial.
 boolean tipusMovimentChg = false;
@@ -110,51 +111,62 @@ void platformndBackground(PImage b) {
   pushMatrix();
   scale(scaleX, scaleY);
 
-  xPlatform = 14/scaleX;
-  yPlatform = 435/scaleY;
+  xPlatform = parseInt(14/scaleX);
+  yPlatform = parseInt(435/scaleY);
 
-  image(imgGrass[0], xPlatform, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width), yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*2, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*3, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*4, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*5, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*6, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*7, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*8, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*9, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*10, yPlatform);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*11, yPlatform);
-  image(imgGrass[2], xPlatform+(imgGrass[0].width)*12, yPlatform);
+  introduirPlatforms(1, 13, 0);
 
-  image(imgGrass[0], xPlatform+(imgGrass[0].width)*3, yPlatform-85);
-  image(imgGrass[2], xPlatform+(imgGrass[0].width)*4, yPlatform-85);
+  introduirPlatforms(4, 5, -85);
 
-  image(imgGrass[0], xPlatform+(imgGrass[0].width)*5, yPlatform-250);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*6, yPlatform-250);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*7, yPlatform-250);
-  image(imgGrass[2], xPlatform+(imgGrass[0].width)*8, yPlatform-250);
+  introduirPlatforms(5, 8, -250);
+
+  introduirPlatforms(9, 10, -125);
 
 
-  image(imgGrass[0], xPlatform+(imgGrass[0].width)*8, yPlatform-125);
-  image(imgGrass[1], xPlatform+(imgGrass[0].width)*9, yPlatform-125);
-  image(imgGrass[2], xPlatform+(imgGrass[0].width)*10, yPlatform-125);
-
-  //Si està en la plataforma que va des de
-  //xPlatform+(imgGrass[0].width)*8, yPlatform-125
-  //fins al punt
-  //xPlatform+(imgGrass[0].width)*10, yPlatform-125
-  //no cau, a la que surt, cau.
-
-
-  if (salta == true) {
-    posicioSalt = /*posicioSalt + */((yPlatform-125)-10)/2;
+  //Si està saltant per sobre de la plataforma, es quedarà sobre d'aquesta.
+  if ((y <= (yPlatform-85)/2)
+    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
+    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
+    ) {
+    //posicioSalttmp = posicioSalt;
+    posicioSalt = ((yPlatform-125)-10)/2;
+    //posicioSalt =(yPlatform-85)/2;
+    //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
+  } else {
+    //posicioSalt = 346;
+    //if(salta == false){
+    posicioSalt = 346;
+    //}
+    //posicioSalt = posicioSalttmp;
   }
+
+  /*
+  console.log("X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
+   console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
+   */
 
   popMatrix();
 
-
   //}
+}
+
+
+//Construeix la part de la dreta / principi fora el for.
+//Quan entra al for acostuma a construir la part central, ja que n'hi haurà mées i per tant
+//com més amunt menys moviments.
+//Si arriba al final, col·loca la part dreta.
+void introduirPlatforms(int numInicial, int numFinal, int posYplat) {
+  image(imgGrass[0], xPlatform+(imgGrass[0].width)*(numInicial-1), yPlatform+posYplat);
+  for (var i = numInicial; i < numFinal; i++) {
+    if (i < numFinal-1) {
+      image(imgGrass[1], xPlatform+(imgGrass[0].width)*i, yPlatform+posYplat);
+    } else {
+      image(imgGrass[2], xPlatform+(imgGrass[0].width)*i, yPlatform+posYplat);
+    }
+  }
+}
+
+void nivells() {
 }
 
 void movSalt() {
