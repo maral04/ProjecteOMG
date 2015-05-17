@@ -114,6 +114,7 @@ void platformndBackground(PImage b) {
   xPlatform = parseInt(14/scaleX);
   yPlatform = parseInt(435/scaleY);
 
+  //Al enviar el paràmetre false, el primer número es per al començament i el segon pel final.
   introduirPlatforms(1, 13, 0, false);
 
   introduirPlatforms(4, 5, -85, false);
@@ -124,11 +125,64 @@ void platformndBackground(PImage b) {
 
   popMatrix();
 
+
   sobrePlatforms();
 
   //}
 }
 
+//Si està saltant per sobre de la plataforma, es quedarà sobre d'aquesta.
+void sobrePlatforms() {
+  //console.log((((yPlatform-85)/2)-5)+"| X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
+  //console.log(dir);
+
+  //Al enviar el paràmetre true, el primer número es per al començament i el segon es la llargada.
+  //introduirPlatforms(0, 7, 0, true);
+  introduirPlatforms(2, 1, -85, true);
+  introduirPlatforms(5, 1, -125, true);
+  introduirPlatforms(3, 1, -250, true);
+
+  if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
+    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
+    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
+    ) {
+
+    if (dir == 7) {
+      posicioSalt = ((yPlatform-125)-10)/2;
+    }
+    //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
+  } else {
+    if ((y <= ((yPlatform-125)/2)-5) /*&& (y >= 225)*/
+      && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15)
+      && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35)
+      ) {
+
+      if (dir == 7) {
+        posicioSalt = ((yPlatform-165)-10)/2;
+      }
+    } else {
+      if ((y <= ((yPlatform-125)/2)-5) /*&& (y >= 225)*/
+        && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15)
+        && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35)
+        ) {
+
+        if (dir == 7) {
+          posicioSalt = ((yPlatform-165)-10)/2;
+        }
+      } else {
+        if (dir != -7) {
+          posicioSalt = 346;
+        }
+      }
+    }
+  }
+
+
+  /*
+  console.log("X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
+   console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
+   */
+}
 
 //Construeix la part de la dreta / principi fora el for.
 //Quan entra al for acostuma a construir la part central, ja que n'hi haurà mées i per tant
@@ -149,50 +203,17 @@ void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debu
       //Si toca l'extrem esquerre del rectangle, o si entra tot el rectangle rosa en el calippo.
       fill(0, 255, 45);
       rect((xPlatform+(imgGrass[1].width)*numInicial)-15, (((yPlatform-posYplat)/2)+posYplat), (xPlatform+(imgGrass[1].width)*numFinal)+25, 5);
+      fill(0, 0, 0);
+      text(posicio, 15, 22);
+      text(posicio+imgJugador[tipusMoviment].width, 15, 42);
+      text(y, 60, 22);
+      text(y+imgJugador[tipusMoviment].height, 60, 42);
+      fill(0, 255, 45);
     }
   }
 }
 
-//Si està saltant per sobre de la plataforma, es quedarà sobre d'aquesta.
-void sobrePlatforms() {
-  //console.log((((yPlatform-85)/2)-5)+"| X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
-  //console.log(dir);
 
-  introduirPlatforms(2, 1, -85);
-
-  if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
-    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
-    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
-    ) {
-
-    //posicioSalttmp = posicioSalt;
-    if (dir == 7) {
-      posicioSalt = ((yPlatform-125)-10)/2;
-    }
-    //posicioSalt =(yPlatform-85)/2;
-    //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
-  } else {
-    if (dir != -7) {
-      posicioSalt = 346;
-    } else {
-
-
-      //posicioSalt = 200;
-    }
-    //posicioSalt = 346;
-    /*if (((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*2)-15)
-     && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*3)+35)) {
-     */
-    //posicioSalt = 346;
-    //}
-    //posicioSalt = posicioSalttmp;
-  }
-
-  /*
-  console.log("X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
-   console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
-   */
-}
 
 void nivells() {
 }
@@ -368,6 +389,13 @@ void keyPressed()
     salta = true;
     if (dir == 0) {
       dir = -SPD;
+    }
+  }
+  if (key == 't' || key == 'T') {
+    if (debugactiu == true) {
+      debugactiu = false;
+    } else {
+      debugactiu = true;
     }
   }
 }
