@@ -6,6 +6,7 @@ PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 PImage[] imgGrass = new PImage[4];
 PImage[] imgStone = new PImage[4];
+PImage[] imgTorch = new PImage[3];
 
 boolean flipdone = false;
 boolean direccio = true;
@@ -18,6 +19,8 @@ int posicioSalt = 346;
 int posicioSalttmp = posicioSalt;
 int tipusMoviment = 5;
 int level = 0; //Pantalla, 0 = tutorial.
+int timer; 
+int tempsGirTorch = 600;
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
 boolean salta = false;
@@ -25,6 +28,7 @@ boolean dreta = false;
 boolean esquerre = false;
 boolean tipusbug;
 boolean debugactiu = true;
+boolean torchOn = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[13];
@@ -69,6 +73,11 @@ void setup() {
 
 
   //Càrrega dels sons.
+  imgTorch[0] = loadImage("Visual/Background/elementsextres/torch/torch1.png");
+  imgTorch[1] = loadImage("Visual/Background/elementsextres/torch/torch2.png");
+  imgTorch[2] = loadImage("Visual/Background/elementsextres/torch/torchOff.png");
+
+  //Càrrega d'objectes del mapa variats.
 
 
   //Atributs de la font
@@ -82,6 +91,8 @@ void draw() {
   //pushMatrix();
   if (iniciar == true) {
     inici();
+    dibuixarTorch(2,40,40);
+    torchOn = true;
   }
   if (dreta == true && esquerre != true) {
     movDret(backgroundimg[2]);
@@ -95,6 +106,18 @@ void draw() {
     //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
   } else {
     salta = false;
+  }
+
+  if (torchOn == true) {
+    if (millis()- timer >= tempsGirTorch) {
+      dibuixarTorch(0,40,40);
+    }
+    if (millis()- timer >= tempsGirTorch*2) {
+      dibuixarTorch(1,40,40);
+      timer = millis();
+    }
+  }else{
+    dibuixarTorch(2,40,40);
   }
 }
 
@@ -125,6 +148,19 @@ void platformndBackground(PImage b) {
 
   popMatrix();
 
+  
+  /*
+    if (direccio == true) {
+   debugspc(true, false);
+   image(imgJugador[tipusMoviment], posicio, posicioSalt);
+   } else {
+   scale(-1, 1);
+   debugspc(false, true);
+   image(imgJugador[tipusMoviment], ((-imgJugador[tipusMoviment].width)-posicio), (y));
+   scale(-1, 1);
+   }
+   */
+
 
   sobrePlatforms();
 
@@ -140,7 +176,7 @@ void sobrePlatforms() {
   //introduirPlatforms(0, 7, 0, true);
   introduirPlatforms(2, 1, -85, true);
   introduirPlatforms(5, 1, -125, true);
-  introduirPlatforms(3, 1, -250, true);
+  introduirPlatforms(3, 1.9, -250, true);
 
   if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
     && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
@@ -204,18 +240,21 @@ void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debu
       fill(0, 255, 45);
       rect((xPlatform+(imgGrass[1].width)*numInicial)-15, (((yPlatform-posYplat)/2)+posYplat), (xPlatform+(imgGrass[1].width)*numFinal)+25, 5);
       fill(0, 0, 0);
+
+      //Text amb les coordenades 
+      //Cap del personatge.
       text(posicio, 15, 22);
-      text(posicio+imgJugador[tipusMoviment].width, 15, 42);
+      text(posicioSalt+imgJugador[tipusMoviment].width, 15, 42);
+      //Peus del personatge.
       text(y, 60, 22);
-      text(y+imgJugador[tipusMoviment].height, 60, 42);
+      text(posicioSalt+imgJugador[tipusMoviment].height, 60, 42);
       fill(0, 255, 45);
     }
   }
 }
 
-
-
 void nivells() {
+  
 }
 
 void movSalt() {
@@ -255,7 +294,7 @@ void movSalt() {
 }
 
 void inici() {
-  movimentPtg();
+  carregaPtg();
   movDret(backgroundimg[2]);
   iniciar = false;
 }
@@ -300,7 +339,7 @@ void bothMoviments(PImage b) {
   }
 }
 
-void movimentPtg() {
+void carregaPtg() {
   //Tría del personatge, 0-1.
   //Cárrega del .txt amb les coordenades linia per linia del personatge a l'Sprite Sheet.
   String[] lines = loadStrings("Visual/Characters/Player/p"+ptg+"_spritesheet.txt");
@@ -354,6 +393,11 @@ void movimentPtg() {
   for (int i = liniaInici; i < liniafinal; i++) {
     imgJugador[i] = src[ptg].get(ptgx[i], ptgy[i], ptgw[i], ptgh[i]);
   }
+}
+
+void dibuixarTorch(int pos, int torchX, int torchY) {
+  platformndBackground(backgroundimg[2]);
+  image(imgTorch[pos], torchX, torchY);
 }
 
 void debugspc(boolean tipusbuggaso, boolean YoS) {
