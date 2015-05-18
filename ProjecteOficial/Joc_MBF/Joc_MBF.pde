@@ -29,6 +29,7 @@ boolean esquerre = false;
 boolean tipusbug;
 boolean debugactiu = true;
 boolean torchOn = false;
+boolean torchCostat = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[13];
@@ -71,7 +72,6 @@ void setup() {
   imgGrass[1] = loadImage("Visual/Mapa/Grass/grassHalf_mid.png");
   imgGrass[2] = loadImage("Visual/Mapa/Grass/grassHalf_right.png");
 
-
   //Càrrega dels sons.
   imgTorch[0] = loadImage("Visual/Background/elementsextres/torch/torch1.png");
   imgTorch[1] = loadImage("Visual/Background/elementsextres/torch/torch2.png");
@@ -91,34 +91,34 @@ void draw() {
   //pushMatrix();
   if (iniciar == true) {
     inici();
-    dibuixarTorch(2, 40, 40);
-    torchOn = true;
+    //torchOn = true;
   }
   if (dreta == true && esquerre != true) {
     movDret(backgroundimg[2]);
   }
   if (esquerre == true && dreta != true) {
+    //displayPtg();
     movEsquerre(backgroundimg[2]);
   }
   if (dir != 0) {
     tipusMoviment = 3;
-    movSalt();
+    displayPtg();
     //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
   } else {
     salta = false;
   }
-
+  /*
   if (torchOn == true) {
-    if (millis()- timer >= tempsGirTorch) {
-      dibuixarTorch(0, 40, 40);
-    }
-    if (millis()- timer >= tempsGirTorch*2) {
-      dibuixarTorch(1, 40, 40);
-      timer = millis();
-    }
-  } else {
-    dibuixarTorch(2, 40, 40);
-  }
+   if (millis()- timer >= tempsGirTorch) {
+   dibuixarTorch(0, 40, 40);
+   }
+   if (millis()- timer >= tempsGirTorch*2) {
+   dibuixarTorch(1, 40, 40);
+   timer = millis();
+   }
+   } else {
+   dibuixarTorch(2, 40, 40);
+   }*/
 }
 
 //Posa l'imatge al background així com les plataformes del nivell dessitjat.
@@ -161,7 +161,6 @@ void platformndBackground(PImage b) {
    }
    */
 
-
   sobrePlatforms();
 
   //}
@@ -176,26 +175,26 @@ void sobrePlatforms() {
   //introduirPlatforms(0, 7, 0, true);
   introduirPlatforms(2, 1, -85, true);
   introduirPlatforms(5, 1, -125, true);
-  introduirPlatforms(3, 1.9, -250, true);
+  introduirPlatforms(3, 2, -275, true);
 
-  if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
-    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
-    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
+  if ((y <= ((yPlatform-275)/2)-5) /*&& (y >= 225)*/
+    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*3)-15)
+    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*5)+35)
     ) {
 
     if (dir == 7) {
-      posicioSalt = ((yPlatform-125)-10)/2;
+      posicioSalt = ((yPlatform-315)-10)/2;
     }
-    //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
   } else {
-    if ((y <= ((yPlatform-125)/2)-5) /*&& (y >= 225)*/
-      && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15)
-      && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35)
+    if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
+      && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
+      && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
       ) {
 
       if (dir == 7) {
-        posicioSalt = ((yPlatform-165)-10)/2;
+        posicioSalt = ((yPlatform-125)-10)/2;
       }
+      //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
     } else {
       if ((y <= ((yPlatform-125)/2)-5) /*&& (y >= 225)*/
         && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15)
@@ -206,6 +205,7 @@ void sobrePlatforms() {
           posicioSalt = ((yPlatform-165)-10)/2;
         }
       } else {
+
         if (dir != -7) {
           posicioSalt = 346;
         }
@@ -256,8 +256,18 @@ void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debu
 void nivells() {
 }
 
-void movSalt() {
+void inici() {
+  carregaPtg();
+  movDret(backgroundimg[2]);
+  //dibuixarTorch(2, 40, 40);
+  iniciar = false;
+}
+
+void displayPtg() {
+
   platformndBackground(backgroundimg[2]);
+
+
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
     dir = dir*-1;
   } else {
@@ -270,7 +280,6 @@ void movSalt() {
   if (y == posicioSalt) {
     tipusMoviment = 5;
   }
-
   if (direccio == false) {
     dreta = false;
     //Salt quiet a l'esquerra.
@@ -290,12 +299,6 @@ void movSalt() {
     debugspc(true, true);
     image(imgJugador[tipusMoviment], (posicio), (y));
   }
-}
-
-void inici() {
-  carregaPtg();
-  movDret(backgroundimg[2]);
-  iniciar = false;
 }
 
 void movDret(PImage b) {
@@ -395,7 +398,7 @@ void carregaPtg() {
 }
 
 void dibuixarTorch(int pos, int torchX, int torchY) {
-  platformndBackground(backgroundimg[2]);
+  //platformndBackground(backgroundimg[2]);
   image(imgTorch[pos], torchX, torchY);
 }
 
@@ -434,11 +437,10 @@ void keyPressed()
       dir = -SPD;
     }
   }
+  //Guarda una screenshot.
   if (key == 'c' || key == 'C') {
     saveFrame("output-####.tga");
   }
-
-
   if (key == 't' || key == 'T') {
     if (debugactiu == true) {
       debugactiu = false;
@@ -477,44 +479,44 @@ void keyReleased() {
  
  }
  */
- 
- /*MENU!
+
+/*MENU!
  int currentScreen;
  
-void setup() {
-  size(500, 500);
-  noStroke();
-  smooth();
-}
+ void setup() {
+ size(500, 500);
+ noStroke();
+ smooth();
+ }
  
-void draw() {
-  switch(currentScreen) {
-  case 0: drawScreenZero(); break;
-  case 1: drawScreenOne(); break;
-  case 2: drawScreenTwo(); break;
-  default: background(0); break;
-  }
-}
+ void draw() {
+ switch(currentScreen) {
+ case 0: drawScreenZero(); break;
+ case 1: drawScreenOne(); break;
+ case 2: drawScreenTwo(); break;
+ default: background(0); break;
+ }
+ }
  
-void mousePressed() {
-  currentScreen++;
-  if (currentScreen > 2) { currentScreen = 0; }
-}
+ void mousePressed() {
+ currentScreen++;
+ if (currentScreen > 2) { currentScreen = 0; }
+ }
  
-void drawScreenZero() {
-  background(255, 0, 0);
-  fill(255);
-  ellipse(100, 100, 400, 400);
-}
+ void drawScreenZero() {
+ background(255, 0, 0);
+ fill(255);
+ ellipse(100, 100, 400, 400);
+ }
  
-void drawScreenOne() {
-  background(0, 255, 0);
-  fill(0);
-  rect(250, 40, 250, 400);
-}
+ void drawScreenOne() {
+ background(0, 255, 0);
+ fill(0);
+ rect(250, 40, 250, 400);
+ }
  
-void drawScreenTwo() {
-  background(0, 0, 255);
-  fill(255, 255, 0);
-  triangle(150, 100, 150, 400, 450, 250);
-}*/
+ void drawScreenTwo() {
+ background(0, 0, 255);
+ fill(255, 255, 0);
+ triangle(150, 100, 150, 400, 450, 250);
+ }*/
