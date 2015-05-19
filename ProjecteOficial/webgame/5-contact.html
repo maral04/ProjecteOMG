@@ -13,7 +13,7 @@
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title>GameDevs Theme</title>
+  <title>JocsMBF</title>
   
   <meta name="title" content="">
   <meta name="description" content="">
@@ -83,16 +83,16 @@
       <div id="contact-form" class="grid_8">
 
         <div id="fields">
-			<form id="ajax-contact-form" action="">
-			<label>Name</label><input type="text" name="name" value="" class="jq_watermark" title="El teu Nom"/><br/>
-
-			<label>E-Mail</label><input type="text" name="email" value="" class="jq_watermark" title="*El teu E-mail"/><br />
-
-			<label>Message</label><textarea name="message" class="jq_watermark" title="*What Up?"></textarea><br />
+			<form id="comentaris" method="POST" action="php/comentaris.php">
+				<label>Name</label><input id="nom" type="text" name="name" value="" class="jq_watermark" maxlength="30" title="El teu Nom"/><br/>
 				
-			<label>asdasd</label>
-				
-			<label>&nbsp;</label><input type="submit" class="luck" name="submit" value="Enviar" />
+				<label>E-Mail</label><input id="correu" type="text" name="email" value="" class="jq_watermark" maxlength="100" title="*El teu E-mail"/><br />
+				<label id="mailerrmsg" class="luck"></label>
+
+				<label>Message</label><textarea id="missatge" name="message" class="jq_watermark" maxlength="4444" title="*What Up?"></textarea><br />
+				<label id="msgerrmsg" class="luck"></label>
+
+				<label>&nbsp;</label><input id="enviar" type="submit" class="luck" name="submit" value="Enviar" />
 			</form>
         </div>
         <div id="note" class="osans-s"></div>
@@ -159,6 +159,7 @@
 <script src="js/jquery.tweet.js"></script>
 <!-- Our custom functions -->
 <script src="js/functions.js"></script>
+<script src="js/checkContact.js"></script>
 
 <!-- Asynchronous google analytics; this is the official snippet.
    Replace UA-XXXXXX-XX with your site's ID and uncomment to enable.
