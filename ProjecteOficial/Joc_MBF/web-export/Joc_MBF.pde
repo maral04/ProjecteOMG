@@ -1,7 +1,7 @@
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
 PImage[] src = new PImage[3];
-PFont font;
+//PFont font;
 PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 PImage[] imgGrass = new PImage[4];
@@ -32,10 +32,10 @@ boolean torchOn = false;
 boolean torchCostat = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
-int ptgx[] = new int[13];
-int ptgy[] = new int[13];
-int ptgw[] = new int[13];
-int ptgh[] = new int[13];
+int ptgx[] = new int[16];
+int ptgy[] = new int[16];
+int ptgw[] = new int[16];
+int ptgh[] = new int[16];
 
 //Posició de les plataformes.
 int xPlatform = posicio;
@@ -81,9 +81,9 @@ void setup() {
 
 
   //Atributs de la font
-  font = loadFont("Arial, 16, true");
+  //font = loadFont("Arial, 16, true");
   fill(0);
-  textFont(font, 18);
+  //textFont(font, 18);
 }
 
 void draw() {
@@ -229,7 +229,7 @@ void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debu
   
   if (debugOnly == false) {
     image(imgGrass[0], xPlatform+(imgGrass[0].width)*(numInicial-1), yPlatform+posYplat);
-    for (var i = numInicial; i < numFinal; i++) {
+    for (int i = numInicial; i < numFinal; i++) {
       if (i < numFinal-1) {
         image(imgGrass[1], xPlatform+(imgGrass[0].width)*i, yPlatform+posYplat);
       } else {
@@ -365,9 +365,10 @@ void carregaPtg() {
 
     //Agafem cada coordenada i l'assignem.
     //(X, Y, Width, Height)
-    for (int i = 0; i < coordptglinia.length; i++) {
+    for (int i = 0; i < coordptglinia.length(); i++) {
       chardins = coordptglinia.charAt(i);
-      if (!chardins.equals(" ")) {
+      //Quan es javascript, " ", si es java ' '.
+      if (chardins != (" ")) {
         if (espai == 0) {
           coordfiltrades[0] = coordfiltrades[0] + chardins;
         } else {
@@ -391,6 +392,7 @@ void carregaPtg() {
     ptgy[j] = parseInt(coordfiltrades[1]);
     ptgw[j] = parseInt(coordfiltrades[2]);
     ptgh[j] = parseInt(coordfiltrades[3]);
+    //console.log(ptgx[j]+" "+ptgy[j]+" "+ptgw[j]+" "+ptgh[j]);
   }
 
   //Bucle que carrega els sectors de la sheet a un array d'imatges.
