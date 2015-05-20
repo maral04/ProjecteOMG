@@ -176,6 +176,7 @@ void sobrePlatforms() {
   introduirPlatforms(2, 1, -85, true);
   introduirPlatforms(5, 1, -125, true);
   introduirPlatforms(3, 2, -275, true);
+    //rect((xPlatform+(imgGrass[0].width)*4)+35,yPlatform+-250,25,25);
 
   if ((y <= ((yPlatform-275)/2)-5) /*&& (y >= 225)*/
     && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*3)-15)
@@ -225,6 +226,7 @@ void sobrePlatforms() {
 //com més amunt menys moviments.
 //Si arriba al final, col·loca la part dreta.
 void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debugOnly) {
+  
   if (debugOnly == false) {
     image(imgGrass[0], xPlatform+(imgGrass[0].width)*(numInicial-1), yPlatform+posYplat);
     for (var i = numInicial; i < numFinal; i++) {
