@@ -11,8 +11,11 @@ PImage[] imgJugador = new PImage[16];
 PImage[] imgGrass = new PImage[4];
 PImage[] imgStone = new PImage[4];
 PImage[] imgTorch = new PImage[3];
+PImage[] imgBat = new PImage[3];
+int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
-boolean flipdone = false;
+int oneAnother = 0;//Pel moviment del ratpenat.
+int oneAnotherTRCH = 0; //Pel canvi de torcha
 boolean direccio = true;
 String coordptglinia;
 int espai;
@@ -22,7 +25,7 @@ int posicio = 25;
 int posicioSalt = 346;
 int posicioSalttmp = posicioSalt;
 int tipusMoviment = 5;
-int level = 0; //Pantalla, 0 = tutorial.
+int level = 0; 
 int timer; 
 int tempsGirTorch = 600;
 boolean tipusMovimentChg = false;
@@ -34,6 +37,8 @@ boolean tipusbug;
 boolean debugactiu = true;
 boolean torchOn = false;
 boolean torchCostat = false;
+boolean noTocat = false; //Si toques el ratpanat..
+boolean pause = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[16];
@@ -51,12 +56,14 @@ float scaleY;
 int pgtotal = 2; //Nombre de personatges disponibles.
 int ptg = 0;
 
-int SPD = 7;
+int SPD = 9;
 int dir, y = posicioSalt;
+
+Extra extraBat1, extraBat2, extraBat3, extraBat4, extraBat5, extraBat6, extraBat7, extraBat8;
 
 void setup() {
   size(1024, 512);
-  //frameRate(7);
+  //frameRate(120);
   //smooth();
 
   //Càrrega dels personatges del Jugador.
@@ -85,45 +92,209 @@ void setup() {
   imgTorch[1] = loadImage("Visual/Background/elementsextres/torch/torch2.png");
   imgTorch[2] = loadImage("Visual/Background/elementsextres/torch/torchOff.png");
 
+  //Càrrega d'imatges d'extres, bat...
+  imgBat[0] = loadImage("Visual/Characters/Tutorial/bat.png");
+  imgBat[1] = loadImage("Visual/Characters/Tutorial/bat_fly.png");
+  imgBat[2] = loadImage("Visual/Characters/Tutorial/bat_hang.png");
+
   //Atributs de la font
   //font = loadFont("Arial, 16, true");
-  fill(0);
+  //fill(0);
   //textFont(font, 18);
+
+  //Objectes ratpentats, extres*. Randomment col·locats.
+  //parseInt(random(1,9))
+  extraBat1 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8))); //Direccio, xPos, yPos, speed.
+  extraBat2 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat3 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat4 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat5 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
 }
 
 void draw() {
   //platformndBackground(backgroundimg[2]);
   //pushMatrix();
+  if (pause == false) {
+    switch(pantalla) {
+    case 0: 
+      pantallaMenu(); 
+      break;
+    case 1: 
+      pantallaTutorial(); 
+      break;
+      //case 2: drawScreenTwo(); break;
+      //default: background(0); break;
+    }
+
+    if (pantalla > 0) {
+      movimentsHabilitats();
+    }
+  }
+}
+
+/*
+  if (torchOn == true) {
+ if (millis()- timer >= tempsGirTorch) {
+ dibuixarTorch(0, 40, 40);
+ }
+ if (millis()- timer >= tempsGirTorch*2) {
+ dibuixarTorch(1, 40, 40);
+ timer = millis();
+ }
+ } else {
+ dibuixarTorch(2, 40, 40);
+ }*/
+
+void pantallaMenu() {
+  background(backgroundimg[0]);
+  // pantalla = pantalla+1;
+  //Quan pasi a la seguent pantalla, iniciar = true;
+  //if (iniciar == true) {
+  if (noTocat == false) {
+    extraBat1.display();
+    extraBat2.display();
+    extraBat3.display();
+    extraBat4.display();
+    extraBat5.display();
+    extraBat6.display();
+    extraBat7.display();
+    extraBat8.display();
+  } else {
+    extraBat1.drive();
+    extraBat2.drive();
+    extraBat3.drive();
+    extraBat4.drive();
+    extraBat5.drive();
+    extraBat6.drive();
+    extraBat7.drive();
+    extraBat8.drive();
+  }
+  if (debugactiu == true) {
+    stroke(2);
+    fill(0);
+    text("Bat 1: Speed = "+extraBat1.xspeed, extraBat1.xpos, extraBat1.ypos);
+    text("Bat 2: Speed = "+extraBat2.xspeed, extraBat2.xpos, extraBat2.ypos);
+    text("Bat 3: Speed = "+extraBat3.xspeed, extraBat3.xpos, extraBat3.ypos);
+    text("Bat 4: Speed = "+extraBat4.xspeed, extraBat4.xpos, extraBat4.ypos);
+    text("Bat 5: Speed = "+extraBat5.xspeed, extraBat5.xpos, extraBat5.ypos);
+    text("Bat 6: Speed = "+extraBat6.xspeed, extraBat6.xpos, extraBat6.ypos);
+    text("Bat 7: Speed = "+extraBat7.xspeed, extraBat7.xpos, extraBat7.ypos);
+    text("Bat 8: Speed = "+extraBat8.xspeed, extraBat8.xpos, extraBat8.ypos);
+  }
+
+  if (noTocat == false) {
+    if ((mouseX >= extraBat1.xpos &&
+      mouseX <= extraBat1.xpos+38 &&
+      mouseY >= extraBat1.ypos &&
+      mouseY <= extraBat1.ypos+48) ||
+      (mouseX >= extraBat2.xpos &&
+      mouseX <= extraBat2.xpos+38 &&
+      mouseY >= extraBat2.ypos &&
+      mouseY <= extraBat2.ypos+48) ||
+      (mouseX >= extraBat3.xpos &&
+      mouseX <= extraBat3.xpos+38 &&
+      mouseY >= extraBat3.ypos &&
+      mouseY <= extraBat3.ypos+48) ||
+      (mouseX >= extraBat4.xpos &&
+      mouseX <= extraBat4.xpos+38 &&
+      mouseY >= extraBat4.ypos &&
+      mouseY <= extraBat4.ypos+48) ||
+      (mouseX >= extraBat5.xpos &&
+      mouseX <= extraBat5.xpos+38 &&
+      mouseY >= extraBat5.ypos &&
+      mouseY <= extraBat5.ypos+48) ||
+      (mouseX >= extraBat6.xpos &&
+      mouseX <= extraBat6.xpos+38 &&
+      mouseY >= extraBat6.ypos &&
+      mouseY <= extraBat6.ypos+48) ||
+      (mouseX >= extraBat7.xpos &&
+      mouseX <= extraBat7.xpos+38 &&
+      mouseY >= extraBat7.ypos &&
+      mouseY <= extraBat7.ypos+48) ||
+      (mouseX >= extraBat8.xpos &&
+      mouseX <= extraBat8.xpos+38 &&
+      mouseY >= extraBat8.ypos &&
+      mouseY <= extraBat8.ypos+48)
+      ) {
+      noTocat = true;
+    }
+  }
+  //text(extraBat1.width,150,200);
+  //iniciar = false;
+  //}
+
+  //
+
+  //Dibuixa la torch per mostrar qué s'està sel·leccionant en el Menú.
+  //dibuixarTorch(40, 40);
+}
+
+//void mouseOver() {
+
+
+//}
+
+void pantallaTutorial() {
   if (iniciar == true) {
     inici();
     //torchOn = true;
   }
-  if (dreta == true && esquerre != true) {
-    movDret(backgroundimg[2]);
+}
+
+class Extra {
+
+  int direccioC;
+  int xpos;
+  int ypos;
+  int xspeed;
+
+  Extra(int d, int xp, int yp, int xs) {
+    direccioC = d;
+    xpos = xp;
+    ypos = yp;
+    xspeed = xs;
   }
-  if (esquerre == true && dreta != true) {
-    //displayPtg();
-    movEsquerre(backgroundimg[2]);
+
+  void display() {
+    image(imgBat[2], xpos, ypos);
   }
-  if (dir != 0) {
-    tipusMoviment = 3;
-    displayPtg();
-    //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
-  } else {
-    salta = false;
+
+  void drive() {
+    //Dreta a Esquerre.
+    if (direccioC == 0) {
+      xpos = xpos - xspeed;
+      if (xpos <= 0) {
+        xpos = width;
+        ypos = parseInt(random(5, height-55));
+      }
+    } else {
+      //Esquerra a Dreta.
+      if (direccioC == 2) {
+        xpos = xpos + xspeed;
+        if (xpos >= width) {
+          xpos = 0;
+          ypos = parseInt(random(5, height-55));
+        }
+      }
+    }
+    if (oneAnother <= 35) {
+      image(imgBat[0], xpos, ypos);
+      oneAnother++;
+    } else {
+      if (oneAnother <= 70) {
+        image(imgBat[1], xpos, ypos);
+        oneAnother++;
+      } else {
+        image(imgBat[0], xpos, ypos);
+        oneAnother = 1;
+      }
+    }
+
+    //image(imgBat[1], xpos, ypos);
   }
-  /*
-  if (torchOn == true) {
-   if (millis()- timer >= tempsGirTorch) {
-   dibuixarTorch(0, 40, 40);
-   }
-   if (millis()- timer >= tempsGirTorch*2) {
-   dibuixarTorch(1, 40, 40);
-   timer = millis();
-   }
-   } else {
-   dibuixarTorch(2, 40, 40);
-   }*/
 }
 
 //Posa l'imatge al background així com les plataformes del nivell dessitjat.
@@ -188,7 +359,7 @@ void sobrePlatforms() {
     && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*5)+35)
     ) {
 
-    if (dir == 7) {
+    if (dir == 9) {
       posicioSalt = ((yPlatform-315)-10)/2;
     }
   } else {
@@ -197,7 +368,7 @@ void sobrePlatforms() {
       && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
       ) {
 
-      if (dir == 7) {
+      if (dir == 9) {
         posicioSalt = ((yPlatform-125)-10)/2;
       }
       //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
@@ -207,12 +378,12 @@ void sobrePlatforms() {
         && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35)
         ) {
 
-        if (dir == 7) {
+        if (dir == 9) {
           posicioSalt = ((yPlatform-165)-10)/2;
         }
       } else {
 
-        if (dir != -7) {
+        if (dir != -9) {
           posicioSalt = 346;
         }
       }
@@ -410,9 +581,19 @@ void carregaPtg() {
   }
 }
 
-void dibuixarTorch(int pos, int torchX, int torchY) {
-  //platformndBackground(backgroundimg[2]);
-  image(imgTorch[pos], torchX, torchY);
+void dibuixarTorch(int torchX, int torchY) {
+  if (oneAnotherTRCH <= 30) {
+    image(imgTorch[0], torchX, torchY);
+    oneAnotherTRCH++;
+  } else {
+    if (oneAnotherTRCH <= 60) {
+      image(imgTorch[1], torchX, torchY);
+      oneAnotherTRCH++;
+    } else {
+      image(imgTorch[0], torchX, torchY);
+      oneAnotherTRCH = 1;
+    }
+  }
 }
 
 void debugspc(boolean tipusbuggaso, boolean YoS) {
@@ -434,8 +615,27 @@ void debugspc(boolean tipusbuggaso, boolean YoS) {
   }
 }
 
+void movimentsHabilitats() {
+  if (dreta == true && esquerre != true) {
+    movDret(backgroundimg[2]);
+  }
+  if (esquerre == true && dreta != true) {
+    //displayPtg();
+    movEsquerre(backgroundimg[2]);
+  }
+  if (dir != 0) {
+    tipusMoviment = 3;
+    displayPtg();
+    //console.log("posicióBase: "+posicioSalt+" | SPD: "+SPD+" | dir: "+dir+" | y: "+y);
+  } else {
+    salta = false;
+  }
+}
+
 void keyPressed()
 {
+  /* if (pantalla == 0) {
+   } else {*/
   if (keyCode == RIGHT || key == 'd' || key == 'D') {
     dreta = true;
     direccio = true;
@@ -454,6 +654,7 @@ void keyPressed()
   if (key == 'c' || key == 'C') {
     saveFrame("output-####.png");
   }
+  //Debugg actiu o no
   if (key == 't' || key == 'T') {
     if (debugactiu == true) {
       debugactiu = false;
@@ -461,9 +662,23 @@ void keyPressed()
       debugactiu = true;
     }
   }
+  //Pausa partida si el debugg està actiu.
+  if (debugactiu == true) {
+    if (key == 'p' || key == 'P') {
+      if (pause == false) {
+        pause = true;
+      } else {
+        pause = false;
+      }
+    }
+  }
+
+  //}
 }
 
 void keyReleased() {
+  /*if (pantalla == 0) {
+   } else {*/
   if (keyCode == RIGHT || key == 'd' || key == 'D')
   {
     dreta = false;
@@ -476,7 +691,9 @@ void keyReleased() {
   {
     salta = false;
   }
+  //}
 }
+
 /* 
  class Platform
  {
@@ -492,44 +709,3 @@ void keyReleased() {
  
  }
  */
-
-/*MENU!
- int currentScreen;
- 
- void setup() {
- size(500, 500);
- noStroke();
- smooth();
- }
- 
- void draw() {
- switch(currentScreen) {
- case 0: drawScreenZero(); break;
- case 1: drawScreenOne(); break;
- case 2: drawScreenTwo(); break;
- default: background(0); break;
- }
- }
- 
- void mousePressed() {
- currentScreen++;
- if (currentScreen > 2) { currentScreen = 0; }
- }
- 
- void drawScreenZero() {
- background(255, 0, 0);
- fill(255);
- ellipse(100, 100, 400, 400);
- }
- 
- void drawScreenOne() {
- background(0, 255, 0);
- fill(0);
- rect(250, 40, 250, 400);
- }
- 
- void drawScreenTwo() {
- background(0, 0, 255);
- fill(255, 255, 0);
- triangle(150, 100, 150, 400, 450, 250);
- }*/
