@@ -452,7 +452,7 @@ void keyPressed()
   }
   //Guarda una screenshot.
   if (key == 'c' || key == 'C') {
-    saveFrame("output-####.tga");
+    saveFrame("output-####.png");
   }
   if (key == 't' || key == 'T') {
     if (debugactiu == true) {

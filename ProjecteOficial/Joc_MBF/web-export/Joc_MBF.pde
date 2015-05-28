@@ -1,5 +1,9 @@
+import processing.sound.*;
+
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
+SoundFile boingSo;
+SoundFile leanSo;
 PImage[] src = new PImage[3];
 //PFont font;
 PImage[] backgroundimg = new PImage[4];
@@ -73,12 +77,13 @@ void setup() {
   imgGrass[2] = loadImage("Visual/Mapa/Grass/grassHalf_right.png");
 
   //Càrrega dels sons.
+  boingSo = new SoundFile(this, "Sound/boing.mp3");
+  leanSo = new SoundFile(this, "Sound/leanon.mp3");
+
+  //Càrrega d'objectes del mapa variats.
   imgTorch[0] = loadImage("Visual/Background/elementsextres/torch/torch1.png");
   imgTorch[1] = loadImage("Visual/Background/elementsextres/torch/torch2.png");
   imgTorch[2] = loadImage("Visual/Background/elementsextres/torch/torchOff.png");
-
-  //Càrrega d'objectes del mapa variats.
-
 
   //Atributs de la font
   //font = loadFont("Arial, 16, true");
@@ -176,7 +181,7 @@ void sobrePlatforms() {
   introduirPlatforms(2, 1, -85, true);
   introduirPlatforms(5, 1, -125, true);
   introduirPlatforms(3, 2, -275, true);
-    //rect((xPlatform+(imgGrass[0].width)*4)+35,yPlatform+-250,25,25);
+  //rect((xPlatform+(imgGrass[0].width)*4)+35,yPlatform+-250,25,25);
 
   if ((y <= ((yPlatform-275)/2)-5) /*&& (y >= 225)*/
     && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*3)-15)
@@ -226,7 +231,7 @@ void sobrePlatforms() {
 //com més amunt menys moviments.
 //Si arriba al final, col·loca la part dreta.
 void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debugOnly) {
-  
+
   if (debugOnly == false) {
     image(imgGrass[0], xPlatform+(imgGrass[0].width)*(numInicial-1), yPlatform+posYplat);
     for (int i = numInicial; i < numFinal; i++) {
@@ -269,7 +274,6 @@ void displayPtg() {
 
   platformndBackground(backgroundimg[2]);
 
-
   if ((y += dir) < posicioSalt-(imgJugador[tipusMoviment].height)) {
     dir = dir*-1;
   } else {
@@ -306,6 +310,7 @@ void displayPtg() {
 void movDret(PImage b) {
   //Colisió extrem Esquerre.
   if (posicio > 1024-imgJugador[5].width) {
+    boingSo.play();
     posicio = posicio - imgJugador[tipusMoviment].width/2;
     movEsquerre(backgroundimg[2]);
   } else {
@@ -319,8 +324,12 @@ void movDret(PImage b) {
 void movEsquerre(PImage b) {
   //Colisió extrem Dret.
   if (posicio < 0) {
+    boingSo.play();
+    //boingSo.rate(2);
+    //leanSo.play();
     posicio = posicio + imgJugador[tipusMoviment].width/2;
     movDret(backgroundimg[2]);
+    //boingSo.stop();
   } else {
     bothMoviments(b);
     scale(-1, 1);
@@ -365,10 +374,10 @@ void carregaPtg() {
 
     //Agafem cada coordenada i l'assignem.
     //(X, Y, Width, Height)
-    for (int i = 0; i < coordptglinia.length(); i++) {
+    for (int i = 0; i < coordptglinia.length (); i++) {
       chardins = coordptglinia.charAt(i);
       //Quan es javascript, " ", si es java ' '.
-      if (chardins != (" ")) {
+      if (chardins != (' ')) {
         if (espai == 0) {
           coordfiltrades[0] = coordfiltrades[0] + chardins;
         } else {
