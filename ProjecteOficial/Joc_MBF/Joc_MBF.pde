@@ -5,7 +5,7 @@ import processing.sound.*;
 SoundFile boingSo;
 SoundFile leanSo;
 PImage[] src = new PImage[3];
-//PFont font;
+PFont fontGuay, fontDebugg;
 PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
 PImage[] imgGrass = new PImage[4];
@@ -39,6 +39,7 @@ boolean torchOn = false;
 boolean torchCostat = false;
 boolean noTocat = false; //Si toques el ratpanat..
 boolean pause = false;
+boolean siClickVideo = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[16];
@@ -62,6 +63,7 @@ int dir, y = posicioSalt;
 Extra extraBat1, extraBat2, extraBat3, extraBat4, extraBat5, extraBat6, extraBat7, extraBat8;
 
 void setup() {
+
   size(1024, 512);
   //frameRate(120);
   //smooth();
@@ -98,20 +100,24 @@ void setup() {
   imgBat[2] = loadImage("Visual/Characters/Tutorial/bat_hang.png");
 
   //Atributs de la font
-  //font = loadFont("Arial, 16, true");
+  //font = loadFont("LuckiestGuy.vlw");
+  fontGuay = createFont("Font/LuckiestGuy.ttf", 22);
+  fontDebugg = createFont("Font/FRADM.TTF", 16);
+  //font = loadFont("Arial");
+  //textFont(fontGuay, 22);
   //fill(0);
   //textFont(font, 18);
 
   //Objectes ratpentats, extres*. Randomment col·locats.
   //parseInt(random(1,9))
-  extraBat1 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8))); //Direccio, xPos, yPos, speed.
-  extraBat2 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat3 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat4 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat5 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
-  extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(0, height-55)), parseInt(random(1, 8)));
+  extraBat1 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8))); //Direccio, xPos, yPos, speed.
+  extraBat2 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat3 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat4 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat5 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
 }
 
 void draw() {
@@ -173,8 +179,9 @@ void pantallaMenu() {
     extraBat8.drive();
   }
   if (debugactiu == true) {
-    stroke(2);
-    fill(0);
+    textFont(fontDebugg);
+    //stroke(2);
+    fill(0, 255, 35);
     text("Bat 1: Speed = "+extraBat1.xspeed, extraBat1.xpos, extraBat1.ypos);
     text("Bat 2: Speed = "+extraBat2.xspeed, extraBat2.xpos, extraBat2.ypos);
     text("Bat 3: Speed = "+extraBat3.xspeed, extraBat3.xpos, extraBat3.ypos);
@@ -230,7 +237,45 @@ void pantallaMenu() {
 
   //Dibuixa la torch per mostrar qué s'està sel·leccionant en el Menú.
   //dibuixarTorch(40, 40);
+
+
+  //Dibuixa el Text del menú.
+  //El text comença a dibuixar-se d'esquerra aball!
+
+  //Debugg del Text:
+  if (debugactiu == true) {
+    fill(0);
+    line((width/3)-4, (height/2)-20, (width/3)+234, (height/2)+4); //Video-Guies externes
+  }
+
+
+  textFont(fontGuay, 66);
+  fill(44);
+  stroke(255);
+  text("Joc MBF", width/4, (height/6));
+  textFont(fontGuay, 44);
+  text("Nova Partida", width/4, (height/6));
+  text("Nova Partida", width/4, (height/6));
+
+  textFont(fontGuay, 22);
+  //Obre enllaç extern a youtube, només un cop fins que surt del recuadre i torna a entrar per no provocar
+  //un super bucle que obre 60 youtubes per segont.
+  text("Video-Guies externes", width/3, (height/2));
+  if ((mouseX >= (width/3)-4 && mouseY >= (height/2)-20) &&
+    (mouseX <= (width/3)+234 && mouseY <= (height/2)+4)
+
+  ) {
+    if (siClickVideo == false) {
+      if (mouseButton == LEFT) {
+        link("https://www.youtube.com/channel/UC1X4rvRTjsv8eSq3PQTsAtg", "_new");
+        siClickVideo = true;
+      }
+    }
+  } else {
+    siClickVideo = false;
+  }
 }
+
 
 //void mouseOver() {
 
@@ -268,18 +313,23 @@ class Extra {
       xpos = xpos - xspeed;
       if (xpos <= 0) {
         xpos = width;
-        ypos = parseInt(random(5, height-55));
+        //do{
+        ypos = parseInt(random(20, height-55));
+        //}while();
+        xspeed = parseInt(random(1, 8));
       }
-    } else {
+    } 
+    /*
       //Esquerra a Dreta.
-      if (direccioC == 2) {
-        xpos = xpos + xspeed;
-        if (xpos >= width) {
-          xpos = 0;
-          ypos = parseInt(random(5, height-55));
-        }
-      }
-    }
+     if (direccioC == 2) {
+     xpos = xpos + xspeed;
+     if (xpos >= width) {
+     xpos = 0;
+     ypos = parseInt(random(20, height-55));
+     xspeed = parseInt(random(1, 8));
+     }
+     }
+     */
     if (oneAnother <= 35) {
       image(imgBat[0], xpos, ypos);
       oneAnother++;
