@@ -33,6 +33,7 @@ boolean iniciar = true;
 boolean salta = false;
 boolean dreta = false;
 boolean esquerre = false;
+boolean aball = false;
 boolean tipusbug;
 boolean debugactiu = true;
 boolean torchOn = false;
@@ -51,6 +52,7 @@ int ptgh[] = new int[16];
 int xPlatform = posicio;
 int yPlatform;
 
+//Posició de la torch al menú, més endavant per una altra cosa.
 float scaleX;
 float scaleY;
 
@@ -67,6 +69,9 @@ void setup() {
   size(1024, 512);
   //frameRate(120);
   //smooth();
+
+  scaleX = width/5.5;
+  scaleY = height/6;
 
   //Càrrega dels personatges del Jugador.
   for (int i = 0; i < pgtotal; i++) {
@@ -235,8 +240,21 @@ void pantallaMenu() {
 
   //
 
+
+//*********
+  //Mou el select des del primer element a l'últim.
+  //element seleccionat == 0 o 1 o 2
+  if (salta == true) {
+    //if element == 0, scale tal.
+    //if element == 1, scale tal.
+    scaleY = (scaleY - 0.5);
+  }
+  if (aball == true) {
+    scaleY = scaleY+(scaleY*0.5);
+  }
+
   //Dibuixa la torch per mostrar qué s'està sel·leccionant en el Menú.
-  //dibuixarTorch(40, 40);
+  dibuixarTorch(scaleX, scaleY);
 
 
   //Dibuixa el Text del menú.
@@ -244,25 +262,40 @@ void pantallaMenu() {
 
   //Debugg del Text:
   if (debugactiu == true) {
-    fill(0);
-    line((width/3)-4, (height/2)-20, (width/3)+234, (height/2)+4); //Video-Guies externes
+    stroke(225);
+
+    line((width/3.5)-4, (height/1.5)-33, (width/3.5)+204, (height/1.5)); //Controls
+    line((width/3.5)-4, (height/1.2)-20, (width/3.5)+234, (height/1.2)+4); //Video-Guies externes
   }
 
 
   textFont(fontGuay, 66);
   fill(44);
   stroke(255);
-  text("Joc MBF", width/4, (height/6));
+  text("Joc MBF", width/6, (height/6));
   textFont(fontGuay, 44);
-  text("Nova Partida", width/4, (height/6));
-  text("Nova Partida", width/4, (height/6));
+
+
+
+  text("Nova Partida", width/3.5, (height/3));
+
+
+
+  text("Carrega Partida", width/3.5, (height/2));
+
+
+
+  text("Controls", width/3.5, (height/1.5));
+
+
+
 
   textFont(fontGuay, 22);
   //Obre enllaç extern a youtube, només un cop fins que surt del recuadre i torna a entrar per no provocar
   //un super bucle que obre 60 youtubes per segont.
-  text("Video-Guies externes", width/3, (height/2));
-  if ((mouseX >= (width/3)-4 && mouseY >= (height/2)-20) &&
-    (mouseX <= (width/3)+234 && mouseY <= (height/2)+4)
+  text("Video-Guies externes", width/3.5, (height/1.2));
+  if ((mouseX >= (width/3.5)-4 && mouseY >= (height/1.2)-20) &&
+    (mouseX <= (width/3.5)+234 && mouseY <= (height/1.2)+4)
 
   ) {
     if (siClickVideo == false) {
@@ -487,7 +520,6 @@ void nivells() {
 void inici() {
   carregaPtg();
   movDret(backgroundimg[2]);
-  //dibuixarTorch(2, 40, 40);
   iniciar = false;
 }
 
@@ -631,7 +663,7 @@ void carregaPtg() {
   }
 }
 
-void dibuixarTorch(int torchX, int torchY) {
+void dibuixarTorch(float torchX, float torchY) {
   if (oneAnotherTRCH <= 30) {
     image(imgTorch[0], torchX, torchY);
     oneAnotherTRCH++;
@@ -700,9 +732,12 @@ void keyPressed()
       dir = -SPD;
     }
   }
-  //Guarda una screenshot.
+  if (keyCode == DOWN || key == 's' || key == 'S') {
+    aball = true;
+  }
+  //Guarda una screenshot en una carpeta anomenada "Screenshots".
   if (key == 'c' || key == 'C') {
-    saveFrame("output-####.png");
+    saveFrame("Screenshots/output-####.png");
   }
   //Debugg actiu o no
   if (key == 't' || key == 'T') {
@@ -741,21 +776,9 @@ void keyReleased() {
   {
     salta = false;
   }
+  if (keyCode == DOWN || key == 's' || key == 'S') {
+    aball = false;
+  }
   //}
 }
 
-/* 
- class Platform
- {
- float x, y, w, h;
- float xvel, yvel;
- 
- 
- void display()
- {
- fill(0);
- rect(x, y, w, h);
- }
- 
- }
- */
