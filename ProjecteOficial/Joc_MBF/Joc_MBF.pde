@@ -38,7 +38,7 @@ boolean salta = false;
 boolean dreta = false;
 boolean esquerre = false;
 boolean aball = false;
-boolean escape = false;
+//boolean escape = false;
 boolean confirma = false;
 boolean tipusbug;
 boolean debugactiu = true;
@@ -47,7 +47,7 @@ boolean torchCostat = false;
 boolean noTocat = false; //Si toques el ratpanat..
 boolean pause = false;
 boolean siClickVideo = false;
-boolean clickMenu = false;
+boolean clickMenu = false; //Fa que el menu inicial no es mogui tant ràpid.
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[16];
@@ -151,7 +151,6 @@ void setup() {
   extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
-  
 }
 
 void draw() {
@@ -161,6 +160,13 @@ void draw() {
 
   //pantalla = 0;
   if (pause == false) {
+      
+    /*
+    fadeIn(); fadeOut o cosas així
+      noStroke();
+      fill(0, 0, 0, 191); //75% Opacity
+      //rect(0, 0, width, height);*/
+
     switch(pantalla) {
     case 0: 
       pantallaMenu(); 
@@ -300,18 +306,18 @@ void pantallaMenu() {
   if (salta == true && clickMenu == true) {
     if (element == 0) {
       element = 2;
-      confirma = false;
     } else {
       element = element - 1;
     }
+    confirma = false;
   }
   if (aball == true && clickMenu == true) {
     if (element == 2) {
       element = 0;
-      confirma = false;
     } else {
       element = element + 1;
     }
+    confirma = false;
   }
   clickMenu = false;
   //Transparència dels rectangles del Menú.
@@ -407,18 +413,40 @@ void pantallaMenu() {
       //text("NOPE", width/2, height/2);
       confirma = false;
       break;
-    case 2: 
-      if (escape == false) {
-        //Controls
-        fill(#999999);
-        rectMode(CENTER);
-        rect(width/2, height/2-10, width/2*1.15, height/2*1.10, 75);
-        rectMode(CORNER);
-        image(imgHUD[0],(width/2)+180,(height/2-10)-160);
-      }else{
-        escape = true;
-      }
+    case 2:
+      //Controls
+      //Posa el fons en modo... segundo plano ?
+      noStroke();
+      fill(0, 0, 0, 191); //75% Opacity
+      rect(0, 0, width, height);
+      //Contenidor Controls
+      fill(#cedfe0);
+      stroke(#bbcbcc);
+      rectMode(CENTER);
+      rect(width/2, height/2-10, width/2*1.15, height/2*1.10, 75);
+      rectMode(CORNER);
+      image(imgHUD[0], (width/2)+210, (height/2-10)-120);
+      textFont(fontGuay, 55);
+      fill(44);
+      text("Controls", width/4, (height/3));
+      stroke(255);
 
+      //Controls dins el Contenidor
+
+
+      //Tancament del contenidor
+      if ((mouseX >= (width/2)+210 && mouseY >= (height/2-10)-120) &&
+        (mouseX <= (width/2)+210+53 && mouseY <= (height/2-10)-120+52)
+        ) {
+
+        //afegir efecte a la X
+        if (mouseButton == LEFT) {
+          //Sino poso lo del mouse no acaba de funcionar, s'auto-tanca.
+          mouseX = mouseX+(60);
+          mouseY = mouseY-(60);
+          confirma = false;
+        }
+      }
       break;
     }
   }
@@ -853,9 +881,9 @@ void keyPressed()
   }
   /*
   //Pausa la partida o surt de finestres. //L'ESCAPE tanca tot el programa, processing fault..
-  if (keyCode == ESC) {
-    escape = true;
-  }*/
+   if (keyCode == ESC) {
+   escape = true;
+   }*/
 
   if (keyCode == ENTER) {
     confirma = true;
