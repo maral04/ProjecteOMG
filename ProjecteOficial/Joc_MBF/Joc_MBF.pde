@@ -4,6 +4,7 @@ import processing.sound.*;
 
 SoundFile boingSo;
 SoundFile leanSo;
+//Movie myPresents;
 PImage[] src = new PImage[3];
 PFont fontGuay, fontDebugg;
 PImage[] backgroundimg = new PImage[4];
@@ -12,10 +13,13 @@ PImage[] imgGrass = new PImage[4];
 PImage[] imgStone = new PImage[4];
 PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
+PImage[] imgSign = new PImage[5];
+PImage[] imgHUD = new PImage[3];
 int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
 int oneAnotherTRCH = 0; //Pel canvi de torcha
+int element = 0; //Element del menú inicial.
 boolean direccio = true;
 String coordptglinia;
 int espai;
@@ -34,6 +38,8 @@ boolean salta = false;
 boolean dreta = false;
 boolean esquerre = false;
 boolean aball = false;
+boolean escape = false;
+boolean confirma = false;
 boolean tipusbug;
 boolean debugactiu = true;
 boolean torchOn = false;
@@ -41,6 +47,7 @@ boolean torchCostat = false;
 boolean noTocat = false; //Si toques el ratpanat..
 boolean pause = false;
 boolean siClickVideo = false;
+boolean clickMenu = false;
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[16];
@@ -69,9 +76,18 @@ void setup() {
   size(1024, 512);
   //frameRate(120);
   //smooth();
+  //S = State, V = Versió, U = Update, D = Date.
+  String S = "PreAlpha";
+  String V = "0.35";
+  String U = "0";
+  String D = "31/05/2015";
+  frame.setTitle("Joc MBF "+S+" V-"+V+" U-"+U+" D-"+D+".");
+
+  //Càrrega del video introductio.
+  /*myPresents = new Movie(this, "Wildlife.wmv");
+   myPresents.play();*/
 
   scaleX = width/5.5;
-  scaleY = height/6;
 
   //Càrrega dels personatges del Jugador.
   for (int i = 0; i < pgtotal; i++) {
@@ -104,6 +120,18 @@ void setup() {
   imgBat[1] = loadImage("Visual/Characters/Tutorial/bat_fly.png");
   imgBat[2] = loadImage("Visual/Characters/Tutorial/bat_hang.png");
 
+  //Càrrega d'imatges, signes...
+  imgSign[0] = loadImage("Visual/Background/elementsextres/sign/sign.png");
+  imgSign[1] = loadImage("Visual/Background/elementsextres/sign/signExit.png");
+  imgSign[2] = loadImage("Visual/Background/elementsextres/sign/signLeft.png");
+  imgSign[3] = loadImage("Visual/Background/elementsextres/sign/signRight.png");
+  imgSign[4] = loadImage("Visual/Background/elementsextres/sign/signExitv2.png");
+
+  //Càrrega d'imatges de l'HUD.
+  imgHUD[0] = loadImage("Visual/HUD/hudX.png");
+  imgHUD[1] = loadImage("Visual/HUD/hudPlayer_green.png");
+  imgHUD[2] = loadImage("Visual/HUD/hudPlayer_pink.png");
+
   //Atributs de la font
   //font = loadFont("LuckiestGuy.vlw");
   fontGuay = createFont("Font/LuckiestGuy.ttf", 22);
@@ -115,32 +143,42 @@ void setup() {
 
   //Objectes ratpentats, extres*. Randomment col·locats.
   //parseInt(random(1,9))
-  extraBat1 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8))); //Direccio, xPos, yPos, speed.
-  extraBat2 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat3 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat4 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat5 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
-  extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55)), parseInt(random(1, 8)));
+  extraBat1 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8))); //Direccio, xPos, yPos, speed.
+  extraBat2 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat3 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat4 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat5 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  
 }
 
 void draw() {
   //platformndBackground(backgroundimg[2]);
   //pushMatrix();
+  //myPresents.play();
+
+  //pantalla = 0;
   if (pause == false) {
     switch(pantalla) {
     case 0: 
       pantallaMenu(); 
+      textFont(fontGuay, 12);
+      fill(0);
+      text("© Copyright 2015-2015 Marçal Bordoy Fàbregas - Almost all rights reserved", 0, height-4);
       break;
     case 1: 
-      pantallaTutorial(); 
+      noStroke();
+      pantallaTutorial();
+      //textFont(fontGuay, 12);
+      //text("© 2015 MBF", 0, height-4);
       break;
       //case 2: drawScreenTwo(); break;
       //default: background(0); break;
     }
 
-    if (pantalla > 0) {
+    if (pantalla >= 1) {
       movimentsHabilitats();
     }
   }
@@ -197,6 +235,23 @@ void pantallaMenu() {
     text("Bat 8: Speed = "+extraBat8.xspeed, extraBat8.xpos, extraBat8.ypos);
   }
 
+
+  image(imgSign[4], (width-128)-25, (height-74)-25);
+
+  if ((mouseX >= (width-128)-25 && mouseY >= (height-74)-25) &&
+    (mouseX <= (width-128)-25+128 && mouseY <= (height-74)-25+74)
+    ) {
+    noFill();
+    rect(width-128-25, (height-74)-25, 128, 74, 15);
+    //line((width-128)-25, (height-74)-25, (width-128)-25+128, (height-74)-25+74);
+    if (mouseButton == LEFT) {
+      /*boolean sortirSegur = false;
+       if (sortirSegur == true) {
+       }*/
+      exit();
+    }
+  }
+
   if (noTocat == false) {
     if ((mouseX >= extraBat1.xpos &&
       mouseX <= extraBat1.xpos+38 &&
@@ -241,16 +296,39 @@ void pantallaMenu() {
   //
 
 
-//*********
   //Mou el select des del primer element a l'últim.
-  //element seleccionat == 0 o 1 o 2
-  if (salta == true) {
-    //if element == 0, scale tal.
-    //if element == 1, scale tal.
-    scaleY = (scaleY - 0.5);
+  if (salta == true && clickMenu == true) {
+    if (element == 0) {
+      element = 2;
+      confirma = false;
+    } else {
+      element = element - 1;
+    }
   }
-  if (aball == true) {
-    scaleY = scaleY+(scaleY*0.5);
+  if (aball == true && clickMenu == true) {
+    if (element == 2) {
+      element = 0;
+      confirma = false;
+    } else {
+      element = element + 1;
+    }
+  }
+  clickMenu = false;
+  //Transparència dels rectangles del Menú.
+
+  fill(#cedfe0);
+  stroke(#bbcbcc);
+  if (element == 0) {
+    scaleY = height/6;
+    rect(width/3.6, height/3.9, 305, 44, 75);
+  } else {
+    if (element == 1) {
+      scaleY = height/3;
+      rect(width/3.6, height/2.35, 380, 44, 75);
+    } else {
+      scaleY = height/2;
+      rect(width/3.6, height/1.69, 220, 44, 75);
+    }
   }
 
   //Dibuixa la torch per mostrar qué s'està sel·leccionant en el Menú.
@@ -262,19 +340,20 @@ void pantallaMenu() {
 
   //Debugg del Text:
   if (debugactiu == true) {
-    stroke(225);
-
-    line((width/3.5)-4, (height/1.5)-33, (width/3.5)+204, (height/1.5)); //Controls
+    //fill();
+    stroke(#00FF19);
+    strokeWeight(4);
+    line((width-128)-25, (height-74)-25, (width-128)-25+128, (height-74)-25+74); //Exit.
+    //line((width/3.5)-4, (height/1.5)-33, (width/3.5)+204, (height/1.5)); //Controls
     line((width/3.5)-4, (height/1.2)-20, (width/3.5)+234, (height/1.2)+4); //Video-Guies externes
   }
-
 
   textFont(fontGuay, 66);
   fill(44);
   stroke(255);
   text("Joc MBF", width/6, (height/6));
-  textFont(fontGuay, 44);
 
+  textFont(fontGuay, 44);
 
 
   text("Nova Partida", width/3.5, (height/3));
@@ -293,13 +372,16 @@ void pantallaMenu() {
   textFont(fontGuay, 22);
   //Obre enllaç extern a youtube, només un cop fins que surt del recuadre i torna a entrar per no provocar
   //un super bucle que obre 60 youtubes per segont.
-  text("Video-Guies externes", width/3.5, (height/1.2));
   if ((mouseX >= (width/3.5)-4 && mouseY >= (height/1.2)-20) &&
     (mouseX <= (width/3.5)+234 && mouseY <= (height/1.2)+4)
 
   ) {
+    fill(#cedfe0);
+    stroke(#bbcbcc);
+    rect(width/3.6, height/1.29, 250, 44, 75);
     if (siClickVideo == false) {
       if (mouseButton == LEFT) {
+
         link("https://www.youtube.com/channel/UC1X4rvRTjsv8eSq3PQTsAtg", "_new");
         siClickVideo = true;
       }
@@ -307,13 +389,40 @@ void pantallaMenu() {
   } else {
     siClickVideo = false;
   }
+  fill(44);
+  text("Video-Guies externes", width/3.5, (height/1.2));
+
+  if (confirma == true) {
+    switch(element) {
+
+    case 0: 
+      //Nova Partida
+      //demanarDades();
+      pantalla = 1;
+      confirma = false;
+      break;
+    case 1: 
+      //Carrega Partida
+      //carregarPartida();
+      //text("NOPE", width/2, height/2);
+      confirma = false;
+      break;
+    case 2: 
+      if (escape == false) {
+        //Controls
+        fill(#999999);
+        rectMode(CENTER);
+        rect(width/2, height/2-10, width/2*1.15, height/2*1.10, 75);
+        rectMode(CORNER);
+        image(imgHUD[0],(width/2)+180,(height/2-10)-160);
+      }else{
+        escape = true;
+      }
+
+      break;
+    }
+  }
 }
-
-
-//void mouseOver() {
-
-
-//}
 
 void pantallaTutorial() {
   if (iniciar == true) {
@@ -344,10 +453,10 @@ class Extra {
     //Dreta a Esquerre.
     if (direccioC == 0) {
       xpos = xpos - xspeed;
-      if (xpos <= 0) {
+      if (xpos <= 0-70) {
         xpos = width;
         //do{
-        ypos = parseInt(random(20, height-55));
+        ypos = parseInt(random(20, height-55-99));
         //}while();
         xspeed = parseInt(random(1, 8));
       }
@@ -728,13 +837,30 @@ void keyPressed()
   }
   if (keyCode == UP || key == 'w' || key == 'W') {
     salta = true;
-    if (dir == 0) {
-      dir = -SPD;
+    if (pantalla == 0) {
+      clickMenu = true;
+    } else {
+      if (dir == 0) {
+        dir = -SPD;
+      }
     }
   }
   if (keyCode == DOWN || key == 's' || key == 'S') {
     aball = true;
+    if (pantalla == 0) {
+      clickMenu = true;
+    }
   }
+  /*
+  //Pausa la partida o surt de finestres. //L'ESCAPE tanca tot el programa, processing fault..
+  if (keyCode == ESC) {
+    escape = true;
+  }*/
+
+  if (keyCode == ENTER) {
+    confirma = true;
+  }
+
   //Guarda una screenshot en una carpeta anomenada "Screenshots".
   if (key == 'c' || key == 'C') {
     saveFrame("Screenshots/output-####.png");
