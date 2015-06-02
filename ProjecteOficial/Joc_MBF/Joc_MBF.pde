@@ -3,7 +3,6 @@ import processing.sound.*;
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
 SoundFile boingSo;
-SoundFile leanSo;
 //Movie myPresents;
 PImage[] src = new PImage[3];
 PFont fontGuay, fontDebugg;
@@ -14,7 +13,7 @@ PImage[] imgStone = new PImage[4];
 PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
-PImage[] imgHUD = new PImage[3];
+PImage[] imgHUD = new PImage[5];
 int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
@@ -108,7 +107,6 @@ void setup() {
 
   //Càrrega dels sons.
   boingSo = new SoundFile(this, "Sound/boing.mp3");
-  leanSo = new SoundFile(this, "Sound/leanon.mp3");
 
   //Càrrega d'objectes del mapa variats.
   imgTorch[0] = loadImage("Visual/Background/elementsextres/torch/torch1.png");
@@ -131,6 +129,8 @@ void setup() {
   imgHUD[0] = loadImage("Visual/HUD/hudX.png");
   imgHUD[1] = loadImage("Visual/HUD/hudPlayer_green.png");
   imgHUD[2] = loadImage("Visual/HUD/hudPlayer_pink.png");
+  imgHUD[3] = loadImage("Visual/HUD/arrows.png");
+  imgHUD[4] = loadImage("Visual/HUD/wasd.png");
 
   //Atributs de la font
   //font = loadFont("LuckiestGuy.vlw");
@@ -160,12 +160,12 @@ void draw() {
 
   //pantalla = 0;
   if (pause == false) {
-      
+
     /*
     fadeIn(); fadeOut o cosas així
-      noStroke();
-      fill(0, 0, 0, 191); //75% Opacity
-      //rect(0, 0, width, height);*/
+     noStroke();
+     fill(0, 0, 0, 191); //75% Opacity
+     //rect(0, 0, width, height);*/
 
     switch(pantalla) {
     case 0: 
@@ -247,8 +247,15 @@ void pantallaMenu() {
   if ((mouseX >= (width-128)-25 && mouseY >= (height-74)-25) &&
     (mouseX <= (width-128)-25+128 && mouseY <= (height-74)-25+74)
     ) {
+    //Fer-lo gran on hover.
+    pushMatrix();
+    scale(1.1);
+    image(imgSign[4], (((width-128)-25)/1.1)-4, (((height-74)-25)/1.1)-3);
+    popMatrix();
+    //Encerclar-lo on hover.
     noFill();
-    rect(width-128-25, (height-74)-25, 128, 74, 15);
+    rect(width-128-25-4, (height-74)-25-3, 128*1.1, 74*1.1, 15);
+    //rect(width-128-25, (height-74)-25, 128, 74, 15);
     //line((width-128)-25, (height-74)-25, (width-128)-25+128, (height-74)-25+74);
     if (mouseButton == LEFT) {
       /*boolean sortirSegur = false;
@@ -374,7 +381,6 @@ void pantallaMenu() {
 
 
 
-
   textFont(fontGuay, 22);
   //Obre enllaç extern a youtube, només un cop fins que surt del recuadre i torna a entrar per no provocar
   //un super bucle que obre 60 youtubes per segont.
@@ -408,46 +414,72 @@ void pantallaMenu() {
       confirma = false;
       break;
     case 1: 
+      //Contenidor
+      modalMaralUP("Partides");
       //Carrega Partida
       //carregarPartida();
-      //text("NOPE", width/2, height/2);
-      confirma = false;
       break;
     case 2:
-      //Controls
-      //Posa el fons en modo... segundo plano ?
-      noStroke();
-      fill(0, 0, 0, 191); //75% Opacity
-      rect(0, 0, width, height);
-      //Contenidor Controls
-      fill(#cedfe0);
-      stroke(#bbcbcc);
-      rectMode(CENTER);
-      rect(width/2, height/2-10, width/2*1.15, height/2*1.10, 75);
-      rectMode(CORNER);
-      image(imgHUD[0], (width/2)+210, (height/2-10)-120);
-      textFont(fontGuay, 55);
-      fill(44);
-      text("Controls", width/4, (height/3));
-      stroke(255);
+      //Contenidor
+      modalMaralUP("Controls");
 
       //Controls dins el Contenidor
+      textFont(fontGuay, 33);
+      text("Moviment:", width/3.8, (height/2.3));
+      text("Altres:", width/1.8, (height/2.3));
+
+      textFont(fontGuay, 22);
+      text("Screenshot:", width/1.75, (height/2));
+      text("Debug:", width/1.75, (height/1.75));
+      textFont(fontGuay, 33);
+      fill(#004d9b);
+      text("C", width/1.40, (height/2));
+      text("T", width/1.53, (height/1.75));
+
+      pushMatrix();
+      scale(0.6);
+
+      image(imgHUD[4], width/2.27, (height/1.22));
+      image(imgHUD[3], width/1.47, (height/1.22));
+      popMatrix();
 
 
-      //Tancament del contenidor
-      if ((mouseX >= (width/2)+210 && mouseY >= (height/2-10)-120) &&
-        (mouseX <= (width/2)+210+53 && mouseY <= (height/2-10)-120+52)
-        ) {
-
-        //afegir efecte a la X
-        if (mouseButton == LEFT) {
-          //Sino poso lo del mouse no acaba de funcionar, s'auto-tanca.
-          mouseX = mouseX+(60);
-          mouseY = mouseY-(60);
-          confirma = false;
-        }
-      }
       break;
+    }
+  }
+}
+
+//Rep un text i el posa en un "Modal Popup" juntament amb la X per tancar-lo.
+void modalMaralUP(String cap) {
+  //Posa el fons en modo... segundo plano.
+  noStroke();
+  fill(0, 0, 0, 191); //75% Opacity
+  rect(0, 0, width, height);
+  //Contenidor
+  fill(#cedfe0);
+  stroke(#bbcbcc);
+  rectMode(CENTER);
+  rect(width/2, height/2-10, width/2*1.15, height/2*1.10, 75);
+  rectMode(CORNER);
+  image(imgHUD[0], (width/2)+210, (height/2-10)-120);
+  textFont(fontGuay, 55);
+  fill(44);
+  text(cap, width/4, (height/3));
+
+  //Tancament del contenidor
+  if ((mouseX >= (width/2)+210 && mouseY >= (height/2-10)-120) &&
+    (mouseX <= (width/2)+210+53 && mouseY <= (height/2-10)-120+52)
+    ) {
+    //Efecte de que es fa gran.
+    pushMatrix();
+    scale(1.1);
+    image(imgHUD[0], (((width/2)+210)/1.1)-2, (((height/2-10)-120)/1.1)-2);
+    popMatrix();
+    if (mouseButton == LEFT) {
+      //Sino poso lo del mouse no acaba de funcionar, s'auto-tanca.
+      mouseX = mouseX+(60);
+      mouseY = mouseY-(60);
+      confirma = false;
     }
   }
 }
