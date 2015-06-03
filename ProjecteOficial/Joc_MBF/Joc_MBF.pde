@@ -13,7 +13,7 @@ PImage[] imgStone = new PImage[4];
 PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
-PImage[] imgHUD = new PImage[5];
+PImage[] imgHUD = new PImage[10];
 int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
@@ -47,6 +47,7 @@ boolean noTocat = false; //Si toques el ratpanat..
 boolean pause = false;
 boolean siClickVideo = false;
 boolean clickMenu = false; //Fa que el menu inicial no es mogui tant ràpid.
+//boolean ptgConfirma = true; //Comprova que s'hagi sel·leccionat un personatge.
 
 //Posició i Width i Height de la part a agafar del personatge.
 int ptgx[] = new int[16];
@@ -131,6 +132,11 @@ void setup() {
   imgHUD[2] = loadImage("Visual/HUD/hudPlayer_pink.png");
   imgHUD[3] = loadImage("Visual/HUD/arrows.png");
   imgHUD[4] = loadImage("Visual/HUD/wasd.png");
+  imgHUD[5] = loadImage("Visual/HUD/hudPlayer_green.png");
+  imgHUD[6] = loadImage("Visual/HUD/hudPlayer_pink.png");
+  imgHUD[7] = loadImage("Visual/HUD/hudPlayer_beige.png");
+  imgHUD[8] = loadImage("Visual/HUD/hudPlayer_blue.png");
+  imgHUD[9] = loadImage("Visual/HUD/hudPlayer_yellow.png");
 
   //Atributs de la font
   //font = loadFont("LuckiestGuy.vlw");
@@ -302,12 +308,6 @@ void pantallaMenu() {
       noTocat = true;
     }
   }
-  //text(extraBat1.width,150,200);
-  //iniciar = false;
-  //}
-
-  //
-
 
   //Mou el select des del primer element a l'últim.
   if (salta == true && clickMenu == true) {
@@ -327,7 +327,6 @@ void pantallaMenu() {
     confirma = false;
   }
   clickMenu = false;
-  //Transparència dels rectangles del Menú.
 
   fill(#cedfe0);
   stroke(#bbcbcc);
@@ -367,19 +366,9 @@ void pantallaMenu() {
   text("Joc MBF", width/6, (height/6));
 
   textFont(fontGuay, 44);
-
-
   text("Nova Partida", width/3.5, (height/3));
-
-
-
   text("Carrega Partida", width/3.5, (height/2));
-
-
-
   text("Controls", width/3.5, (height/1.5));
-
-
 
   textFont(fontGuay, 22);
   //Obre enllaç extern a youtube, només un cop fins que surt del recuadre i torna a entrar per no provocar
@@ -409,44 +398,176 @@ void pantallaMenu() {
 
     case 0: 
       //Nova Partida
-      //demanarDades();
-      pantalla = 1;
-      confirma = false;
+      modalMaralUP("Nova Partida");
+      //pantalla = 1;
+
+      //Controls dins el Contenidor
+      stuffContainerNovaPartida();
       break;
     case 1: 
       //Contenidor
       modalMaralUP("Partides");
-      //Carrega Partida
-      //carregarPartida();
+      //Controls dins el Contenidor
+      stuffContainerCarregaPartida();
       break;
     case 2:
       //Contenidor
       modalMaralUP("Controls");
 
       //Controls dins el Contenidor
-      textFont(fontGuay, 33);
-      text("Moviment:", width/3.8, (height/2.3));
-      text("Altres:", width/1.8, (height/2.3));
-
-      textFont(fontGuay, 22);
-      text("Screenshot:", width/1.75, (height/2));
-      text("Debug:", width/1.75, (height/1.75));
-      textFont(fontGuay, 33);
-      fill(#004d9b);
-      text("C", width/1.40, (height/2));
-      text("T", width/1.53, (height/1.75));
-
-      pushMatrix();
-      scale(0.6);
-
-      image(imgHUD[4], width/2.27, (height/1.22));
-      image(imgHUD[3], width/1.47, (height/1.22));
-      popMatrix();
-
+      stuffContainerControls();
 
       break;
     }
   }
+}
+
+void stuffContainerNovaPartida() {
+  textFont(fontGuay, 33);
+  text("Personatge:", width/3.8, (height/2.3));
+  text("Nom:", width/1.8, (height/2.3));
+  
+  /********here */
+
+  fill(#cedfe0);
+  stroke(#bbcbcc);
+  rect(590, 315, 180, 53, 75);
+  fill(44);
+  text("Comença!", width/1.70, (height/1.45));
+/*
+  if ((mouseX >= 280 && mouseY >= 245) &&
+    (mouseX <= 330 && mouseY <= 300)
+    ) {
+    image(imgHUD[5], width/2.3, (height/1.32));
+
+    //Efecte de que es fa gran.
+    pushMatrix();
+    scale(1.05);
+    image(imgHUD[5], (width/2.3)-24, (height/1.32)-22);
+    popMatrix();
+    if (mouseButton == LEFT) {
+      ptg = 0;
+    }
+  }*/
+
+
+  /*fill(#cedfe0);
+   stroke(#bbcbcc);*/
+
+  textFont(fontGuay, 22);
+  text("caixa", width/1.75, (height/2));
+
+
+  pushMatrix();
+  scale(0.6);
+
+  image(imgHUD[5], width/2.3, (height/1.32));
+  image(imgHUD[6], width/1.80, (height/1.32));
+  image(imgHUD[7], width/1.48, (height/1.32));
+  image(imgHUD[8], width/2.02, (height/1.05));
+  image(imgHUD[9], width/1.62, (height/1.05));
+
+  fill(255, 255, 255);
+  textFont(fontGuay, 44);
+  text(mouseX+" "+mouseY, 50, 50);
+
+  if ((mouseX >= 280 && mouseY >= 245) &&
+    (mouseX <= 330 && mouseY <= 300)
+    ) {
+    image(imgHUD[5], width/2.3, (height/1.32));
+
+    //Efecte de que es fa gran.
+    pushMatrix();
+    scale(1.05);
+    image(imgHUD[5], (width/2.3)-24, (height/1.32)-22);
+    popMatrix();
+    if (mouseButton == LEFT) {
+      ptg = 0;
+    }
+  }
+
+  if ((mouseX >= 350 && mouseY >= 250) &&
+    (mouseX <= 405 && mouseY <= 300)
+    ) {
+    image(imgHUD[6], width/1.80, (height/1.32));
+
+    //Efecte de que es fa gran.
+    pushMatrix();
+    scale(1.05);
+    image(imgHUD[6], (width/1.80)-30, (height/1.32)-22);
+    popMatrix();
+    if (mouseButton == LEFT) {
+      ptg = 1;
+    }
+  }
+
+  //Els que no estàn disponibles amb un neglaso a sobre.
+  noStroke();
+  fill(0, 0, 0, 127);
+  if ((mouseX >= 426 && mouseY >= 250) &&
+    (mouseX <= 475 && mouseY <= 300)
+    ) {
+    ellipse(width/1.355, height/1.13, 88, 88);
+  }
+
+  if ((mouseX >= 315 && mouseY >= 305) &&
+    (mouseX <= 365 && mouseY <= 355)
+    ) {
+    ellipse(width/1.795, height/0.925, 88, 88);
+  }
+
+  if ((mouseX >= 390 && mouseY >= 305) &&
+    (mouseX <= 445 && mouseY <= 355)
+    ) {
+    ellipse(width/1.47, height/0.925, 88, 88);
+  }
+
+  popMatrix();
+
+  stroke(255);
+  fill(0, 0, 0, 0);
+  if (ptg == 0) {
+    ellipse(305, 272, 60, 60);
+  } else {
+    if (ptg == 1) {
+      ellipse(379.5, 272, 60, 60);
+    }
+  }
+}
+
+void stuffContainerCarregaPartida() {
+  //Buscar a l'arxiu X la partida.
+  
+  //Si no troba l'arxiu:
+  
+  textFont(fontGuay, 33);
+  fill(205,45,45);
+  text("No s'ha trobat cap partida.", width/3.8, (height/2.3));
+  
+  //Si l'arxiu es il·legible:
+  //text("No s'ha pogut llegir l'arxiu.", width/3.8, (height/2.3));
+  
+}
+
+void stuffContainerControls() {
+  textFont(fontGuay, 33);
+  text("Moviment:", width/3.8, (height/2.3));
+  text("Altres:", width/1.8, (height/2.3));
+
+  textFont(fontGuay, 22);
+  text("Screenshot:", width/1.75, (height/2));
+  text("Debug:", width/1.75, (height/1.75));
+  textFont(fontGuay, 33);
+  fill(#004d9b);
+  text("C", width/1.40, (height/2));
+  text("T", width/1.53, (height/1.75));
+
+  pushMatrix();
+  scale(0.6);
+
+  image(imgHUD[4], width/2.27, (height/1.22));
+  image(imgHUD[3], width/1.47, (height/1.22));
+  popMatrix();
 }
 
 //Rep un text i el posa en un "Modal Popup" juntament amb la X per tancar-lo.
@@ -890,10 +1011,16 @@ void keyPressed()
   if (keyCode == RIGHT || key == 'd' || key == 'D') {
     dreta = true;
     direccio = true;
+    if (pantalla == 0) {
+      confirma = true;
+    }
   }
   if (keyCode == LEFT || key == 'a' || key == 'A') {
     esquerre = true;
     direccio = false;
+    if (pantalla == 0) {
+      confirma = false;
+    }
   }
   if (keyCode == UP || key == 'w' || key == 'W') {
     salta = true;
