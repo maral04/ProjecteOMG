@@ -2,7 +2,7 @@ import processing.sound.*;
 
 /* @pjs preload="Visual/Background/bg_grasslands.png"; */
 
-SoundFile boingSo;
+SoundFile introSo, boingSo;
 //Movie myPresents;
 PImage[] src = new PImage[3];
 PFont fontGuay, fontDebugg;
@@ -14,6 +14,7 @@ PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
 PImage[] imgHUD = new PImage[10];
+PImage imgCursor;
 int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
@@ -108,6 +109,7 @@ void setup() {
 
   //Càrrega dels sons.
   boingSo = new SoundFile(this, "Sound/boing.mp3");
+  introSo = new SoundFile(this, "Sound/intro.mp3");
 
   //Càrrega d'objectes del mapa variats.
   imgTorch[0] = loadImage("Visual/Background/elementsextres/torch/torch1.png");
@@ -138,6 +140,8 @@ void setup() {
   imgHUD[8] = loadImage("Visual/HUD/hudPlayer_blue.png");
   imgHUD[9] = loadImage("Visual/HUD/hudPlayer_yellow.png");
 
+  imgCursor = loadImage("Visual/Cursor/cursorS.png");
+
   //Atributs de la font
   //font = loadFont("LuckiestGuy.vlw");
   fontGuay = createFont("Font/LuckiestGuy.ttf", 22);
@@ -157,6 +161,10 @@ void setup() {
   extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
+  
+  //introSo.play();
+  //introSo.loop();
+  
 }
 
 void draw() {
@@ -174,13 +182,15 @@ void draw() {
      //rect(0, 0, width, height);*/
 
     switch(pantalla) {
-    case 0: 
+    case 0:
+      //cursor(imgCursor);
       pantallaMenu(); 
       textFont(fontGuay, 12);
       fill(0);
       text("© Copyright 2015-2015 Marçal Bordoy Fàbregas - Almost all rights reserved", 0, height-4);
       break;
     case 1: 
+      introSo.stop();
       noStroke();
       pantallaTutorial();
       //textFont(fontGuay, 12);
@@ -400,7 +410,6 @@ void pantallaMenu() {
       //Nova Partida
       modalMaralUP("Nova Partida");
       //pantalla = 1;
-
       //Controls dins el Contenidor
       stuffContainerNovaPartida();
       break;
@@ -425,37 +434,44 @@ void pantallaMenu() {
 void stuffContainerNovaPartida() {
   textFont(fontGuay, 33);
   text("Personatge:", width/3.8, (height/2.3));
-  text("Nom:", width/1.8, (height/2.3));
-  
-  /********here */
+  /*text("Nom:", width/1.8, (height/2.3));*/
 
-  fill(#cedfe0);
-  stroke(#bbcbcc);
-  rect(590, 315, 180, 53, 75);
-  fill(44);
-  text("Comença!", width/1.70, (height/1.45));
-/*
-  if ((mouseX >= 280 && mouseY >= 245) &&
-    (mouseX <= 330 && mouseY <= 300)
+  if ((mouseX >= 565 && mouseY >= 250) &&
+    (mouseX <= 735 && mouseY <= 300)
     ) {
-    image(imgHUD[5], width/2.3, (height/1.32));
-
+      /*
+      if ((mouseX >= 590 && mouseY >= 315) &&
+    (mouseX <= 775 && mouseY <= 370)
+    ) {*/
+    //cursor(HAND);
     //Efecte de que es fa gran.
-    pushMatrix();
-    scale(1.05);
-    image(imgHUD[5], (width/2.3)-24, (height/1.32)-22);
-    popMatrix();
+    fill(#ffffff);
+    //stroke(#bbcbcc);
+    //rect(590, 315, 180, 53, 75);
+    rect(557, 245, 180, 53, 75);
+    fill(44);
+    //text("Comença!", width/1.70, (height/1.45));
+    text("Comença!", width/1.80, (height/1.80));
+
     if (mouseButton == LEFT) {
-      ptg = 0;
+      //En un futur checkeja si el nom està introduit.
+      pantalla = 1;
     }
-  }*/
+  } else {
+    /*fill(#cedfe0);
+    stroke(#bbcbcc);
+    rect(590, 315, 180, 53, 75);*/
+    fill(44);
+    //text("Comença!", width/1.70, (height/1.45));
+    text("Comença!", width/1.80, (height/1.80));
+  }
 
 
   /*fill(#cedfe0);
    stroke(#bbcbcc);*/
-
+/*
   textFont(fontGuay, 22);
-  text("caixa", width/1.75, (height/2));
+  text("caixa", width/1.75, (height/2));*/
 
 
   pushMatrix();
@@ -467,9 +483,10 @@ void stuffContainerNovaPartida() {
   image(imgHUD[8], width/2.02, (height/1.05));
   image(imgHUD[9], width/1.62, (height/1.05));
 
+/*
   fill(255, 255, 255);
   textFont(fontGuay, 44);
-  text(mouseX+" "+mouseY, 50, 50);
+  text(mouseX+" "+mouseY, 50, 50);*/
 
   if ((mouseX >= 280 && mouseY >= 245) &&
     (mouseX <= 330 && mouseY <= 300)
@@ -537,16 +554,15 @@ void stuffContainerNovaPartida() {
 
 void stuffContainerCarregaPartida() {
   //Buscar a l'arxiu X la partida.
-  
+
   //Si no troba l'arxiu:
-  
+
   textFont(fontGuay, 33);
-  fill(205,45,45);
+  fill(205, 45, 45);
   text("No s'ha trobat cap partida.", width/3.8, (height/2.3));
-  
+
   //Si l'arxiu es il·legible:
   //text("No s'ha pogut llegir l'arxiu.", width/3.8, (height/2.3));
-  
 }
 
 void stuffContainerControls() {
