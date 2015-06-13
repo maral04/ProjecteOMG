@@ -15,7 +15,7 @@ PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
 PImage[] imgHUD = new PImage[10];
 PImage imgCursor;
-int pantalla = 1; //Menu i pantalles. Pantalla 0 = tutorial.
+int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
 int oneAnotherTRCH = 0; //Pel canvi de torcha
