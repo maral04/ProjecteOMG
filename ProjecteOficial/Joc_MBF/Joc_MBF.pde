@@ -32,6 +32,7 @@ int tipusMoviment = 5;
 int level = 0; 
 int timer; 
 int tempsGirTorch = 600;
+int easyPlatform = 45;
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
 boolean salta = false;
@@ -48,6 +49,9 @@ boolean noTocat = false; //Si toques el ratpanat..
 boolean pause = false;
 boolean siClickVideo = false;
 boolean clickMenu = false; //Fa que el menu inicial no es mogui tant ràpid.
+boolean sobrePlatformy = false;
+boolean checkPoint = false;
+boolean dead = false;
 //boolean ptgConfirma = true; //Comprova que s'hagi sel·leccionat un personatge.
 
 //Posició i Width i Height de la part a agafar del personatge.
@@ -161,10 +165,9 @@ void setup() {
   extraBat6 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat7 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
   extraBat8 = new Extra(0, parseInt(random(width-150, width-50)), parseInt(random(20, height-55-99)), parseInt(random(1, 8)));
-  
+
   //introSo.play();
   //introSo.loop();
-  
 }
 
 void draw() {
@@ -439,10 +442,10 @@ void stuffContainerNovaPartida() {
   if ((mouseX >= 565 && mouseY >= 250) &&
     (mouseX <= 735 && mouseY <= 300)
     ) {
-      /*
+    /*
       if ((mouseX >= 590 && mouseY >= 315) &&
-    (mouseX <= 775 && mouseY <= 370)
-    ) {*/
+     (mouseX <= 775 && mouseY <= 370)
+     ) {*/
     //cursor(HAND);
     //Efecte de que es fa gran.
     fill(#ffffff);
@@ -459,8 +462,8 @@ void stuffContainerNovaPartida() {
     }
   } else {
     /*fill(#cedfe0);
-    stroke(#bbcbcc);
-    rect(590, 315, 180, 53, 75);*/
+     stroke(#bbcbcc);
+     rect(590, 315, 180, 53, 75);*/
     fill(44);
     //text("Comença!", width/1.70, (height/1.45));
     text("Comença!", width/1.80, (height/1.80));
@@ -469,9 +472,9 @@ void stuffContainerNovaPartida() {
 
   /*fill(#cedfe0);
    stroke(#bbcbcc);*/
-/*
+  /*
   textFont(fontGuay, 22);
-  text("caixa", width/1.75, (height/2));*/
+   text("caixa", width/1.75, (height/2));*/
 
 
   pushMatrix();
@@ -483,10 +486,10 @@ void stuffContainerNovaPartida() {
   image(imgHUD[8], width/2.02, (height/1.05));
   image(imgHUD[9], width/1.62, (height/1.05));
 
-/*
+  /*
   fill(255, 255, 255);
-  textFont(fontGuay, 44);
-  text(mouseX+" "+mouseY, 50, 50);*/
+   textFont(fontGuay, 44);
+   text(mouseX+" "+mouseY, 50, 50);*/
 
   if ((mouseX >= 280 && mouseY >= 245) &&
     (mouseX <= 330 && mouseY <= 300)
@@ -686,13 +689,20 @@ class Extra {
   }
 }
 
+//Tot els extres de la pantalla després de platform.
+void altresPantalla() {
+  
+  //porta, banderola, text. asdjhasjkd*****
+  
+  
+}
+
 //Posa l'imatge al background així com les plataformes del nivell dessitjat.
 void platformndBackground(PImage b) {
   background(b);
 
   //Fer switch case de levels.
   //if(){
-
   scaleX = 0.6;
   scaleY = 0.6;
 
@@ -711,9 +721,17 @@ void platformndBackground(PImage b) {
 
   introduirPlatforms(9, 10, -125, false);
 
+  introduirPlatforms(3, 5, -395, false);
+
+  introduirPlatforms(7, 8, -510, false);
+
+  introduirPlatforms(10, 12, -575, false);
+
+  //introduirPlatforms(11, 12, -575, false);
+
   popMatrix();
 
-
+  altresPantalla();
   /*
     if (direccio == true) {
    debugspc(true, false);
@@ -725,14 +743,23 @@ void platformndBackground(PImage b) {
    scale(-1, 1);
    }
    */
-
+  mousedbg();
   sobrePlatforms();
-
   //}
 }
 
+void mousedbg() {
+  if (debugactiu == true) {
+    text(mouseX+" "+mouseY, mouseX, mouseY);
+  }
+}
 //Si està saltant per sobre de la plataforma, es quedarà sobre d'aquesta.
 void sobrePlatforms() {
+  if (debugactiu == true) {
+    easyPlatform = 10;
+  } else {
+    easyPlatform = 0;
+  }
   //console.log((((yPlatform-85)/2)-5)+"| X Jugador: "+((imgJugador[tipusMoviment].width)+posicio)+" Y Jugador: "+y);
   //console.log(dir);
 
@@ -740,44 +767,114 @@ void sobrePlatforms() {
   //introduirPlatforms(0, 7, 0, true);
   introduirPlatforms(2, 1, -85, true);
   introduirPlatforms(5, 1, -125, true);
-  introduirPlatforms(3, 2, -275, true);
+  //introduirPlatforms(3, 2, -275, true);
+
   //rect((xPlatform+(imgGrass[0].width)*4)+35,yPlatform+-250,25,25);
 
-  if ((y <= ((yPlatform-275)/2)-5) /*&& (y >= 225)*/
-    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*3)-15)
-    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*5)+35)
+  sobrePlatformy = false;
+
+  if (y <= 85 && y >= 1
+    && (posicio >= 475-35-easyPlatform && posicio <= 627-15)
     ) {
-
-    if (dir == 9) {
-      posicioSalt = ((yPlatform-315)-10)/2;
+    sobrePlatformy = true;
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-625)-10)/2;
+      y = posicioSalt;
     }
-  } else {
-    if ((y <= ((yPlatform-85)/2)-5) /*&& (y >= 225)*/
-      && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15)
-      && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35)
-      ) {
+    checkPoint = true;
+  }
 
-      if (dir == 9) {
-        posicioSalt = ((yPlatform-125)-10)/2;
-      }
-      //console.log("X Plataforma: "+(xPlatform+(imgGrass[0].width)*2)+" Y Plataforma: "+(yPlatform-85)/2);
-    } else {
-      if ((y <= ((yPlatform-125)/2)-5) /*&& (y >= 225)*/
-        && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15)
-        && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35)
-        ) {
-
-        if (dir == 9) {
-          posicioSalt = ((yPlatform-165)-10)/2;
-        }
-      } else {
-
-        if (dir != -9) {
-          posicioSalt = 346;
-        }
-      }
+  //>
+  if (y <= 110 && (y >= 1)
+    && (posicio >= 705-35-easyPlatform && posicio <= 935-15)
+    ) {
+    sobrePlatformy = true;
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-700)-10)/2;
+      y = posicioSalt;
     }
   }
+
+  //<
+  if ((y <= ((yPlatform-395)/2)-5) && (y + imgJugador[tipusMoviment].height >= 205)
+    && (posicio >= 165-(imgJugador[tipusMoviment].width/2)-15-easyPlatform && posicio <= 398-15)
+    ) {
+    sobrePlatformy = true;
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-490)-10)/2;
+      y = posicioSalt;
+    }
+  }
+
+  if ((y <= ((yPlatform-275)/2)-5) && (y + imgJugador[tipusMoviment].height >= 290)
+    && posicio >= 320-(imgJugador[tipusMoviment].width/2)-15-easyPlatform && posicio <= 628-15-easyPlatform
+    ) {
+    sobrePlatformy = true;
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-320)-10)/2;
+      y = posicioSalt;
+    }
+  }
+
+  //<
+  //315 -> 280
+  if ((y <= ((yPlatform-85)/2)-5) && y >= 280
+    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*2)-15-easyPlatform)
+    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*3)+35+easyPlatform)
+    ) {
+    sobrePlatformy = true;
+    //295, just dins la plataforma.
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-125)-10)/2;
+      y = posicioSalt;
+    }
+  }
+  //text((((yPlatform-125)/2)-5),120,222);
+  //>
+  //295
+  if (y >= 260 && (y <= ((yPlatform-125)/2)-5)
+    && ((imgJugador[tipusMoviment].width)+posicio >= (xPlatform+(imgGrass[0].width)*5)-15-easyPlatform)
+    && ((imgJugador[tipusMoviment].width)+posicio <= (xPlatform+(imgGrass[0].width)*6)+35+easyPlatform)
+    ) {
+    sobrePlatformy = true;
+    if (dir == 9 || dir == 0) {
+      posicioSalt = ((yPlatform-165)-10)/2;
+      y = posicioSalt;
+    }
+  }
+
+
+  if (aball == true) {
+    dead = true;
+  }
+
+
+
+
+  //Si no està saltant, cau.
+  if ( (dir == 0) && sobrePlatformy == false) {
+    posicioSalt = 346;
+    y = posicioSalt;
+  } 
+
+  if (checkPoint == true) {
+    if (dead == true) {
+      posicioSalt = ((yPlatform-625)-10)/2;
+      y = posicioSalt;
+      posicio = 545;
+      dead = false;
+    }
+  }
+
+
+
+
+  /*else {
+   if (sobrePlatformy == true) {
+   //
+   sobrePlatformy = false;
+   }*/
+
 
 
   /*
@@ -816,6 +913,9 @@ void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debu
       text(y, 60, 22);
       text(posicioSalt+imgJugador[tipusMoviment].height, 60, 42);
       fill(0, 255, 45);
+      text("Direcció: "+dir+" "+sobrePlatformy, 150, 50);
+
+      text(" PosSalt "+posicioSalt+" | Y: "+y, 150, 75);
     }
   }
 }
@@ -1110,3 +1210,4 @@ void keyReleased() {
   }
   //}
 }
+
