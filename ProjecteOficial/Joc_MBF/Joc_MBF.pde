@@ -14,7 +14,8 @@ PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
 PImage[] imgHUD = new PImage[10];
-PImage[] imgMapExtres = new PImage[4];
+PImage[] imgMapExtres = new PImage[7];
+PImage[] imgWater = new PImage[3];
 PImage imgCursor;
 int pantalla = 1; //Menu i pantalles. Pantalla 0 = tutorial.
 
@@ -34,6 +35,7 @@ int level = 0;
 int timer; 
 int tempsGirTorch = 600;
 int easyPlatform = 45;
+int moviments = 0;
 boolean tipusMovimentChg = false;
 boolean iniciar = true;
 boolean salta = false;
@@ -53,6 +55,8 @@ boolean clickMenu = false; //Fa que el menu inicial no es mogui tant ràpid.
 boolean sobrePlatformy = false;
 boolean checkPoint = false;
 boolean dead = false;
+boolean arribat = false;
+boolean[] starPillada = new boolean[5];
 //boolean ptgConfirma = true; //Comprova que s'hagi sel·leccionat un personatge.
 
 //Posició i Width i Height de la part a agafar del personatge.
@@ -116,7 +120,10 @@ void setup() {
   imgStone[1] = loadImage("Visual/Mapa/Stone/stoneHalf_mid.png");
   imgStone[2] = loadImage("Visual/Mapa/Stone/stoneHalf_right.png");
 
-
+  //Càrrega de l'aigua.
+  imgWater[0] = loadImage("Visual/Background/elementsextres/waterTop_low.png");
+  imgWater[1] = loadImage("Visual/Background/elementsextres/waterTop_high.png");
+  imgWater[2] = loadImage("Visual/Background/elementsextres/water.png");
 
   //Càrrega dels sons.
   boingSo = new SoundFile(this, "Sound/boing.mp3");
@@ -220,7 +227,17 @@ void draw() {
     }
 
     if (pantalla >= 1) {
-      movimentsHabilitats();
+      if (arribat == false) {
+        movimentsHabilitats();
+      }else{
+        if(posicio < 865){
+          movDret(backgroundimg[2]);
+          /*Habilitar per moviment chulo
+          if(posicio > 864){
+            movEsquerre(backgroundimg[2]);
+          }*/
+        }
+      }
     }
   }
 }
@@ -707,8 +724,95 @@ class Extra {
 
 //Tot els extres de la pantalla després de platform.
 void altresPantalla() {
+  textFont(fontGuay, 32);
+  fill(#ffcc00);
+  //Contador d'Stars.
+  int stars = 0;
+  for (int i = 0; i < starPillada.length; i++) {
+    if (starPillada[i] == true) {
+      stars++;
+    }
+  }
+  text("Stars: "+stars, 50, 50);
+  fill(#1ea7e1);
+  text("Moviments: "+moviments, 50, 80);
 
-  //porta, banderola, text. asdjhasjkd*****
+  //image(imgMapExtres[6], parseInt(random(165, 400)), 200-imgMapExtres[6].height);
+  if (starPillada[0] == false) {
+    if (posicioSalt == 346 && posicio+(imgJugador[tipusMoviment].width/2) >= 165 
+      && posicio <= 165+(imgMapExtres[6].width)/2) {
+      starPillada[0] = true;
+    }
+  }
+
+  if (starPillada[1] == false) {
+    if (posicioSalt == 295 && posicio+(imgJugador[tipusMoviment].width/2) >= 300 
+      && posicio <= 300+(imgMapExtres[6].width)/2) {
+      starPillada[1] = true;
+    }
+  }
+  if (starPillada[2] == false) {
+    if (posicioSalt == 275 && posicio+(imgJugador[tipusMoviment].width/2) >= 655 
+      && posicio <= 655+(imgMapExtres[6].width)/2) {
+      starPillada[2] = true;
+    }
+  }
+  if (starPillada[3] == false) {
+    if (posicioSalt == 197 && posicio+(imgJugador[tipusMoviment].width/2) >= 525 
+      && posicio <= 525+(imgMapExtres[6].width)/2) {
+      starPillada[3] = true;
+    }
+  }
+  if (starPillada[4] == false) {
+    if (posicioSalt == 112 && posicio+(imgJugador[tipusMoviment].width/2) >= 225 
+      && posicio <= 225+(imgMapExtres[6].width)/2) {
+      starPillada[4] = true;
+    }
+  }
+
+  if (starPillada[0] == false) {
+    image(imgMapExtres[6], 165, 430-imgMapExtres[6].height);
+  } 
+  if (starPillada[1] == false) {
+    image(imgMapExtres[6], 300, 385-imgMapExtres[6].height);
+  } 
+  if (starPillada[2] == false) {
+    image(imgMapExtres[6], 655, 360-imgMapExtres[6].height);
+  } 
+  if (starPillada[3] == false) {
+    image(imgMapExtres[6], 525, 285-imgMapExtres[6].height);
+  } 
+  if (starPillada[4] == false) {
+    image(imgMapExtres[6], 225, 200-imgMapExtres[6].height);
+  }
+
+  if (arribat == false) {
+    image(imgMapExtres[2], 810, 90-imgMapExtres[0].height);
+    if (checkPoint == false) {
+      image(imgMapExtres[0], 540, 130-imgMapExtres[0].height);
+    } else {
+      image(imgMapExtres[1], 540, 130-imgMapExtres[1].height);
+    }
+  } else {
+    image(imgMapExtres[3], 810, 90-imgMapExtres[1].height);
+    checkPoint = false;
+
+    text("R = Reintentar", 710, 165);
+
+    //Array amb moltes partides, agafa la que té el màxim de monedes i màxim de moviments.
+    /*
+    for(){
+     
+     }*/
+    fill(#80be1f);
+    text("Millor Puntuació: ", 50, 115);
+    fill(#ffcc00);
+    text(stars+" Stars", 50, 145);
+    fill(#1ea7e1);
+    text(moviments+" Moviments", 185, 145);
+  }
+
+  textFont(fontDebugg, 14);
 }
 
 //Posa l'imatge al background així com les plataformes del nivell dessitjat.
@@ -769,6 +873,7 @@ void mousedbg() {
 }
 //Si està saltant per sobre de la plataforma, es quedarà sobre d'aquesta.
 void sobrePlatforms() {
+  moviments++;
   if (debugactiu == true) {
     easyPlatform = 10;
   } else {
@@ -807,6 +912,7 @@ void sobrePlatforms() {
       posicioSalt = ((yPlatform-700)-10)/2;
       y = posicioSalt;
     }
+    arribat = true;
   }
 
   //<
@@ -1138,6 +1244,10 @@ void movimentsHabilitats() {
     salta = false;
   }
 }
+/*
+void recorregutAutomatic(){
+  movDret(backgroundimg[2]);
+}*/
 
 void keyPressed()
 {
@@ -1173,6 +1283,22 @@ void keyPressed()
       clickMenu = true;
     }
   }
+
+  //restart
+  if (key == 'r' || key == 'R') {
+    if (arribat == true) {
+      arribat = false;
+      moviments = 0;
+      posicioSalt = 346;
+      y = posicioSalt;
+      posicio = 25;
+      for (int i = 0; i < starPillada.length; i++) {
+        starPillada[i] = false;
+      }
+      checkPoint = false;
+      movDret(backgroundimg[2]);
+    }
+  }
   /*
   //Pausa la partida o surt de finestres. //L'ESCAPE tanca tot el programa, processing fault..
    if (keyCode == ESC) {
@@ -1203,7 +1329,11 @@ void keyPressed()
       } else {
         pause = false;
       }
-    }
+    }/*
+    if (key == 'm' || key == 'M') {
+      automatic = true;
+      recorregutAutomatic();
+    }*/
   }
 
   //}
