@@ -8,12 +8,13 @@ PImage[] src = new PImage[3];
 PFont fontGuay, fontDebugg;
 PImage[] backgroundimg = new PImage[4];
 PImage[] imgJugador = new PImage[16];
-PImage[] imgGrass = new PImage[4];
-PImage[] imgStone = new PImage[4];
+PImage[] imgGrass = new PImage[3];
+PImage[] imgStone = new PImage[3];
 PImage[] imgTorch = new PImage[3];
 PImage[] imgBat = new PImage[3];
 PImage[] imgSign = new PImage[5];
 PImage[] imgHUD = new PImage[10];
+PImage[] imgMapExtres = new PImage[4];
 PImage imgCursor;
 int pantalla = 1; //Menu i pantalles. Pantalla 0 = tutorial.
 
@@ -111,6 +112,12 @@ void setup() {
   imgGrass[1] = loadImage("Visual/Mapa/Grass/grassHalf_mid.png");
   imgGrass[2] = loadImage("Visual/Mapa/Grass/grassHalf_right.png");
 
+  imgStone[0] = loadImage("Visual/Mapa/Stone/stoneHalf_left.png");
+  imgStone[1] = loadImage("Visual/Mapa/Stone/stoneHalf_mid.png");
+  imgStone[2] = loadImage("Visual/Mapa/Stone/stoneHalf_right.png");
+
+
+
   //Càrrega dels sons.
   boingSo = new SoundFile(this, "Sound/boing.mp3");
   introSo = new SoundFile(this, "Sound/intro.mp3");
@@ -143,6 +150,15 @@ void setup() {
   imgHUD[7] = loadImage("Visual/HUD/hudPlayer_beige.png");
   imgHUD[8] = loadImage("Visual/HUD/hudPlayer_blue.png");
   imgHUD[9] = loadImage("Visual/HUD/hudPlayer_yellow.png");
+
+  //Càrrega dels extres del mapa.
+  imgMapExtres[0] = loadImage("Visual/Items/itemsMapa/flagBlueHanging.png");
+  imgMapExtres[1] = loadImage("Visual/Items/itemsMapa/flagBlue2.png");
+  imgMapExtres[2] = loadImage("Visual/Items/itemsMapa/flagGreenHanging.png");
+  imgMapExtres[3] = loadImage("Visual/Items/itemsMapa/flagGreen2.png");
+  imgMapExtres[4] = loadImage("Visual/Items/itemsMapa/doorOpen_mid.png");
+  imgMapExtres[5] = loadImage("Visual/Items/itemsMapa/doorOpen_top.png");
+  imgMapExtres[6] = loadImage("Visual/Items/itemsMapa/star.png");
 
   imgCursor = loadImage("Visual/Cursor/cursorS.png");
 
@@ -691,10 +707,8 @@ class Extra {
 
 //Tot els extres de la pantalla després de platform.
 void altresPantalla() {
-  
+
   //porta, banderola, text. asdjhasjkd*****
-  
-  
 }
 
 //Posa l'imatge al background així com les plataformes del nivell dessitjat.
@@ -713,19 +727,19 @@ void platformndBackground(PImage b) {
   yPlatform = parseInt(435/scaleY);
 
   //Al enviar el paràmetre false, el primer número es per al començament i el segon pel final.
-  introduirPlatforms(1, 13, 0, false);
+  introduirPlatforms(1, 13, 0, false, 0);
 
-  introduirPlatforms(4, 5, -85, false);
+  introduirPlatforms(4, 5, -85, false, 0);
 
-  introduirPlatforms(5, 8, -250, false);
+  introduirPlatforms(5, 8, -250, false, 0);
 
-  introduirPlatforms(9, 10, -125, false);
+  introduirPlatforms(9, 10, -125, false, 0);
 
-  introduirPlatforms(3, 5, -395, false);
+  introduirPlatforms(3, 5, -395, false, 0);
 
-  introduirPlatforms(7, 8, -510, false);
+  introduirPlatforms(7, 8, -510, false, 1);
 
-  introduirPlatforms(10, 12, -575, false);
+  introduirPlatforms(10, 12, -575, false, 1);
 
   //introduirPlatforms(11, 12, -575, false);
 
@@ -765,8 +779,8 @@ void sobrePlatforms() {
 
   //Al enviar el paràmetre true, el primer número es per al començament i el segon es la llargada.
   //introduirPlatforms(0, 7, 0, true);
-  introduirPlatforms(2, 1, -85, true);
-  introduirPlatforms(5, 1, -125, true);
+  introduirPlatforms(2, 1, -85, true, 0);
+  introduirPlatforms(5, 1, -125, true, 0);
   //introduirPlatforms(3, 2, -275, true);
 
   //rect((xPlatform+(imgGrass[0].width)*4)+35,yPlatform+-250,25,25);
@@ -774,7 +788,7 @@ void sobrePlatforms() {
   sobrePlatformy = false;
 
   if (y <= 85 && y >= 1
-    && (posicio >= 475-35-easyPlatform && posicio <= 627-15)
+    && (posicio >= 475-40-easyPlatform && posicio <= 627-15)
     ) {
     sobrePlatformy = true;
     if (dir == 9 || dir == 0) {
@@ -786,7 +800,7 @@ void sobrePlatforms() {
 
   //>
   if (y <= 110 && (y >= 1)
-    && (posicio >= 705-35-easyPlatform && posicio <= 935-15)
+    && (posicio >= 705-40-easyPlatform && posicio <= 935-15)
     ) {
     sobrePlatformy = true;
     if (dir == 9 || dir == 0) {
@@ -843,12 +857,9 @@ void sobrePlatforms() {
     }
   }
 
-
   if (aball == true) {
     dead = true;
   }
-
-
 
 
   //Si no està saltant, cau.
@@ -866,15 +877,11 @@ void sobrePlatforms() {
     }
   }
 
-
-
-
   /*else {
    if (sobrePlatformy == true) {
    //
    sobrePlatformy = false;
    }*/
-
 
 
   /*
@@ -887,22 +894,34 @@ void sobrePlatforms() {
 //Quan entra al for acostuma a construir la part central, ja que n'hi haurà mées i per tant
 //com més amunt menys moviments.
 //Si arriba al final, col·loca la part dreta.
-void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debugOnly) {
+void introduirPlatforms(int numInicial, int numFinal, int posYplat, boolean debugOnly, int tipus) {
+  PImage[] imgColocar = new PImage[3]; 
+  if (tipus == 0) {
+    for (int i = 0; i < imgColocar.length; i++) {
+      imgColocar[i] = imgGrass[i];
+    }
+  } else {
+    if (tipus == 1) {
+      for (int i = 0; i < imgColocar.length; i++) {
+        imgColocar[i] = imgStone[i];
+      }
+    }
+  }
 
   if (debugOnly == false) {
-    image(imgGrass[0], xPlatform+(imgGrass[0].width)*(numInicial-1), yPlatform+posYplat);
+    image(imgColocar[0], xPlatform+(imgColocar[0].width)*(numInicial-1), yPlatform+posYplat);
     for (int i = numInicial; i < numFinal; i++) {
       if (i < numFinal-1) {
-        image(imgGrass[1], xPlatform+(imgGrass[0].width)*i, yPlatform+posYplat);
+        image(imgColocar[1], xPlatform+(imgColocar[0].width)*i, yPlatform+posYplat);
       } else {
-        image(imgGrass[2], xPlatform+(imgGrass[0].width)*i, yPlatform+posYplat);
+        image(imgColocar[2], xPlatform+(imgColocar[0].width)*i, yPlatform+posYplat);
       }
     }
   } else {
     if (debugactiu == true) {
       //Si toca l'extrem esquerre del rectangle, o si entra tot el rectangle rosa en el calippo.
       fill(0, 255, 45);
-      rect((xPlatform+(imgGrass[1].width)*numInicial)-15, (((yPlatform-posYplat)/2)+posYplat), (xPlatform+(imgGrass[1].width)*numFinal)+25, 5);
+      rect((xPlatform+(imgColocar[1].width)*numInicial)-15, (((yPlatform-posYplat)/2)+posYplat), (xPlatform+(imgColocar[1].width)*numFinal)+25, 5);
       fill(0, 0, 0);
 
       //Text amb les coordenades 
