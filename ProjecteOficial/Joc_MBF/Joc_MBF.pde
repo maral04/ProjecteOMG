@@ -85,6 +85,10 @@ Extra extraBat1, extraBat2, extraBat3, extraBat4, extraBat5, extraBat6, extraBat
 void setup() {
 
   size(1024, 512);
+  /*
+  PImage icon = loadImage("Visual/favicon.ico");
+  frame.setIconImage((Image) icon.getNative());*/
+  
   //frameRate(120);
   //smooth();
   //S = State, V = Versió, U = Update, D = Date.
