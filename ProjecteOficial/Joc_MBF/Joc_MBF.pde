@@ -17,7 +17,7 @@ PImage[] imgHUD = new PImage[10];
 PImage[] imgMapExtres = new PImage[7];
 PImage[] imgWater = new PImage[3];
 PImage imgCursor;
-int pantalla = 2; //Menu i pantalles. Pantalla 0 = tutorial.
+int pantalla = 0; //Menu i pantalles. Pantalla 0 = tutorial.
 
 int oneAnother = 0;//Pel moviment del ratpenat.
 int oneAnotherTRCH = 0; //Pel canvi de torcha
@@ -46,7 +46,7 @@ boolean aball = false;
 //boolean escape = false;
 boolean confirma = false;
 boolean tipusbug;
-boolean debugactiu = true;
+boolean debugactiu = false;
 boolean torchOn = false;
 boolean torchCostat = false;
 boolean noTocat = false; //Si toques el ratpanat..
@@ -211,6 +211,7 @@ void draw() {
     switch(pantalla) {
     case 0:
       //cursor(imgCursor);
+      strokeWeight(3);
       pantallaMenu(); 
       textFont(fontGuay, 12);
       fill(0);
@@ -241,7 +242,10 @@ void draw() {
            movEsquerre(backgroundimg[2]);
            }*/
         } else {
-          if (pantalla == 2) {
+          if (pantalla == 2 && posicio > 435) {
+            posicioSalt = 95-imgJugador[tipusMoviment].height;
+            y = posicioSalt;
+            movEsquerre(backgroundimg[2]);
           }
         }
       }
@@ -313,6 +317,7 @@ void pantallaMenu() {
     popMatrix();
     //Encerclar-lo on hover.
     noFill();
+    //strokeWeight(3);
     rect(width-128-25-4, (height-74)-25-3, 128*1.1, 74*1.1, 15);
     //rect(width-128-25, (height-74)-25, 128, 74, 15);
     //line((width-128)-25, (height-74)-25, (width-128)-25+128, (height-74)-25+74);
@@ -841,68 +846,66 @@ void altresPantalla() {
     }
   } else {
     if (pantalla == 2) {
-      /*
       if (starPillada[0] == false) {
-       if (posicioSalt == 346 && posicio+(imgJugador[tipusMoviment].width/2) >= 165 
-       && posicio <= 165+(imgMapExtres[6].width)/2) {
-       starPillada[0] = true;
-       }
-       }
-       
-       if (starPillada[1] == false) {
-       if (posicioSalt == 295 && posicio+(imgJugador[tipusMoviment].width/2) >= 300 
-       && posicio <= 300+(imgMapExtres[6].width)/2) {
-       starPillada[1] = true;
-       }
-       }
-       if (starPillada[2] == false) {
-       if (posicioSalt == 275 && posicio+(imgJugador[tipusMoviment].width/2) >= 655 
-       && posicio <= 655+(imgMapExtres[6].width)/2) {
-       starPillada[2] = true;
-       }
-       }
-       if (starPillada[3] == false) {
-       if (posicioSalt == 197 && posicio+(imgJugador[tipusMoviment].width/2) >= 525 
-       && posicio <= 525+(imgMapExtres[6].width)/2) {
-       starPillada[3] = true;
-       }
-       }
-       if (starPillada[4] == false) {
-       if (posicioSalt == 112 && posicio+(imgJugador[tipusMoviment].width/2) >= 225 
-       && posicio <= 225+(imgMapExtres[6].width)/2) {
-       starPillada[4] = true;
-       }
-       }
-       
-       if (starPillada[0] == false) {
-       image(imgMapExtres[6], 165, 430-imgMapExtres[6].height);
-       } 
-       if (starPillada[1] == false) {
-       image(imgMapExtres[6], 300, 385-imgMapExtres[6].height);
-       } 
-       if (starPillada[2] == false) {
-       image(imgMapExtres[6], 655, 360-imgMapExtres[6].height);
-       } 
-       if (starPillada[3] == false) {
-       image(imgMapExtres[6], 525, 285-imgMapExtres[6].height);
-       } 
-       if (starPillada[4] == false) {
-       image(imgMapExtres[6], 225, 200-imgMapExtres[6].height);
-       }
-       */
+        if (posicioSalt == 346 && posicio+(imgJugador[tipusMoviment].width/2) >= 165 
+          && posicio <= 165+(imgMapExtres[6].width)/2) {
+          starPillada[0] = true;
+        }
+      }
+      if (starPillada[1] == false) {
+        if (posicioSalt == 188 && posicio+(imgJugador[tipusMoviment].width/2) >= 465 
+          && posicio <= 465+(imgMapExtres[6].width)/2) {
+          starPillada[1] = true;
+        }
+      }
+      if (starPillada[2] == false) {
+        if (posicioSalt == 273 && posicio+(imgJugador[tipusMoviment].width/2) >= 635 
+          && posicio <= 635+(imgMapExtres[6].width)/2) {
+          starPillada[2] = true;
+        }
+      }
+      if (starPillada[3] == false) {
+        if (posicioSalt == 73 && posicio+(imgJugador[tipusMoviment].width/2) >= 655 
+          && posicio <= 655+(imgMapExtres[6].width)/2) {
+          starPillada[3] = true;
+        }
+      }
+      if (starPillada[4] == false) {
+        if (y <= 205 && y >= 95 && posicio+(imgJugador[tipusMoviment].width/2) >= 965 
+          && posicio <= 965+(imgMapExtres[6].width)/2) {
+          starPillada[4] = true;
+        }
+      }
+
+      if (starPillada[0] == false) {
+        image(imgMapExtres[6], 165, 430-imgMapExtres[6].height);
+      } 
+      if (starPillada[1] == false) {
+        image(imgMapExtres[6], 465, 275-imgMapExtres[6].height);
+      }
+      if (starPillada[2] == false) {
+        image(imgMapExtres[6], 655, 360-imgMapExtres[6].height);
+      } 
+      if (starPillada[3] == false) {
+        image(imgMapExtres[6], 635, 175-imgMapExtres[6].height);
+      } 
+      if (starPillada[4] == false) {
+        image(imgMapExtres[6], 965, 210-imgMapExtres[6].height);
+      }
+
       if (arribat == false) {
-        image(imgMapExtres[2], 810, 90-imgMapExtres[0].height);
+        image(imgMapExtres[2], 505, 85-imgMapExtres[0].height);
         if (checkPoint == false) {
-          image(imgMapExtres[0], 540, 130-imgMapExtres[0].height);
+          image(imgMapExtres[0], 315, 230-imgMapExtres[0].height);
         } else {
-          image(imgMapExtres[1], 540, 130-imgMapExtres[1].height);
+          image(imgMapExtres[1], 315, 230-imgMapExtres[1].height);
         }
       } else {
-        image(imgMapExtres[3], 810, 90-imgMapExtres[1].height);
+        image(imgMapExtres[3], 505, 85-imgMapExtres[1].height);
         checkPoint = false;
         fill(44);
-        text("R = Reintentar", 710, 165);
-        text("C = Continuar", 710, 205);
+        text("R = Reintentar", 405, 155);
+        //text("C = Continuar", 405, 185);
 
         fill(#80be1f);
         text("*Millor Puntuació: ", 50, 115);
@@ -913,7 +916,6 @@ void altresPantalla() {
       }
     }
   }
-
   textFont(fontDebugg, 14);
 }
 
@@ -931,7 +933,6 @@ void platformndBackground(PImage b) {
 
   xPlatform = parseInt(14/scaleX);
   yPlatform = parseInt(435/scaleY);
-
 
   if (pantalla == 1) {
     //Al enviar el paràmetre false, el primer número es per al començament i el segon pel final.
@@ -969,7 +970,7 @@ void platformndBackground(PImage b) {
       introduirPlatforms(6, 8, -585, false, 1);
 
       //X Despistar
-      introduirPlatforms(12, 13, -495, false, 0);
+      introduirPlatforms(12, 13, -535, false, 0);
     }
   }
   //introduirPlatforms(11, 12, -575, false);
@@ -977,18 +978,16 @@ void platformndBackground(PImage b) {
   popMatrix();
 
   altresPantalla();
-
+  
   if (pantalla == 1) {
     fill(#80be1f);
+    text("Recollir estrelles aumenta la puntuació", 165, 260);
+    text("No són obligatories per acabar la pantalla", 155, 275);
     text("Pots atravesar una plataforma saltant", 375, 345);
     text("Anar a una plataforma inferiór t'envia a la plataforma més baixa", 555, 420);
-    sobrePlatforms();
-  } else {
-    if (pantalla == 2) {
-      sobrePlatforms();
-    }
-  }
-
+    text("Les plataformes de roca solen contenir objectius importants", 540, 190);
+  } 
+  sobrePlatforms();
   mousedbg();
 }
 
@@ -1079,7 +1078,6 @@ void sobrePlatforms() {
         y = posicioSalt;
       }
     }
-    //text((((yPlatform-125)/2)-5),120,222);
     //>
     //295
     if (y >= 260 && (y <= ((yPlatform-125)/2)-5)
@@ -1098,29 +1096,29 @@ void sobrePlatforms() {
       introduirPlatforms(1, -1, 1000, true, 0); // Pot donar errors.
 
       sobrePlatformy = false;
-      /*
-    if (y <= 85 && y >= 1
-       && (posicio >= 475-40-easyPlatform && posicio <= 627-15)
-       ) {
-       sobrePlatformy = true;
-       if (dir == 9 || dir == 0) {
-       posicioSalt = ((yPlatform-625)-10)/2;
-       y = posicioSalt;
-       }
-       checkPoint = true;
-       }
-       
-       //>
-       if (y <= 110 && (y >= 1)
-       && (posicio >= 705-40-easyPlatform && posicio <= 935-15)
-       ) {
-       sobrePlatformy = true;
-       if (dir == 9 || dir == 0) {
-       posicioSalt = ((yPlatform-700)-10)/2;
-       y = posicioSalt;
-       }
-       arribat = true;
-       }*/
+
+      if (y <= 150 && y + imgJugador[tipusMoviment].height >= 165
+        && (posicio >= 245-40-easyPlatform && posicio <= 400-15)
+        ) {
+        sobrePlatformy = true;
+        if (dir == 9 || dir == 0) {
+          posicioSalt = 235-imgJugador[tipusMoviment].height;
+          y = posicioSalt;
+        }
+        checkPoint = true;
+      }
+
+      //SMidTop
+      if (y <= 35 //&& y + imgJugador[tipusMoviment].height >= 15
+      && (posicio >= 400-40-easyPlatform && posicio <= 620-15)
+        ) {
+        sobrePlatformy = true;
+        if (dir == 9 || dir == 0) {
+          posicioSalt = 95-imgJugador[tipusMoviment].height;
+          y = posicioSalt;
+        }
+        arribat = true;
+      }
 
       //<G
       if ((y <= ((yPlatform-125)/2)-5) && (y + imgJugador[tipusMoviment].height >= 365)
@@ -1157,7 +1155,7 @@ void sobrePlatforms() {
 
       //G>>
       if ((y <= ((yPlatform-325)/2)-5) && (y + imgJugador[tipusMoviment].height >= 245)
-        && (posicio >= 705-40-easyPlatform && posicio <= 935-15)
+        && (posicio >= 705-40-easyPlatform && posicio <= 935-15) && posicioSalt != 273
         ) {
         sobrePlatformy = true;
         if (dir == 9 || dir == 0) {
@@ -1167,12 +1165,12 @@ void sobrePlatforms() {
       }
 
       //G>MID
-      if ((y <= ((yPlatform-455)/2)-5) && (y + imgJugador[tipusMoviment].height >= 245)
-        && (posicio >= 550-40-easyPlatform && posicio <= 705-15)
+      if ((y <= ((yPlatform-455)/2)-5) && (y + imgJugador[tipusMoviment].height >= 165)
+        && (posicio >= 550-40-easyPlatform && posicio <= 705-20) && (y <= 80)
         ) {
         sobrePlatformy = true;
         if (dir == 9 || dir == 0) {
-          posicioSalt = 250-imgJugador[tipusMoviment].height;
+          posicioSalt = 170-imgJugador[tipusMoviment].height;
           y = posicioSalt;
         }
       }
@@ -1197,17 +1195,33 @@ void sobrePlatforms() {
     /*fill(#1ea7e1, 75);
      rect(480,160,50,20,95);*/
     fill(#1ea7e1, 225);
-    text("S+Moviment per Tornar", 480, 185);
+    if (pantalla == 1) {
+      text("S+Moviment per Tornar", 480, 185);
+    } else {
+      if (pantalla == 2) {
+        text("S+Moviment per Tornar", 250, 285);
+      }
+    }
     if (aball == true) {
+      if (pantalla == 1) {
+        posicioSalt = ((yPlatform-625)-10)/2;
+        y = posicioSalt;
+        posicio = 545;
 
-      posicioSalt = ((yPlatform-625)-10)/2;
-      y = posicioSalt;
-      posicio = 545;
+        //dreta = false;
+        // dead = false;
+        aball = false;
+        sobrePlatforms();
+      } else {
+        if (pantalla == 2) {
+          posicioSalt = 235-imgJugador[tipusMoviment].height;
+          y = posicioSalt;
+          posicio = 300;
 
-      //dreta = false;
-      // dead = false;
-      aball = false;
-      sobrePlatforms();
+          aball = false;
+          sobrePlatforms();
+        }
+      }
     }
   }
 
