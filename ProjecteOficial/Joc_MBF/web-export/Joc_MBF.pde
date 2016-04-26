@@ -503,7 +503,7 @@ void stuffContainerNovaPartida() {
     rect(557, 245, 180, 53, 75);
     fill(44);
     //text("Comença!", width/1.70, (height/1.45));
-    //text("Comença!", width/1.80, (height/1.80));
+    text("Comença!", width/1.80, (height/1.80));
 
     if (mouseButton == LEFT) {
       //En un futur checkeja si el nom està introduit.
@@ -1641,4 +1641,5 @@ void keyReleased() {
   }
   //}
 }
+
 
